@@ -49,7 +49,22 @@ select:focus {
     align-items: stretch;
     margin: 10% 24px 0 24px;
     font-size: 3em;
-    height: 100%;
+    flex: 1;
+    min-height: 0;
+    overflow: auto;
+}
+
+#dictionary-bar {
+    margin-top: auto;
+    padding-bottom: env(safe-area-inset-bottom);
+}
+
+#stats {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    padding: 10px 16px 8px;
+    color: #444;
 }
 
 #question, #answer {

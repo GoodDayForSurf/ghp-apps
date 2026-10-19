@@ -8,18 +8,20 @@
 </head>
 <body>
 <div id="app">
-    <div id="dictionaries">
-        <select name="dicts" id="dictionaries-select">
-            <option value="">-- Select dictionary --</option>
-        </select>
-    </div>
-    <div>
-        <span>Total: <span id="dict-size">0</span></span>&nbsp;&nbsp;
-        <span>In queue: <span id="queue-size">0</span></span>
-    </div>
     <div id="card" class="card">
         <div id="question"></div>
         <div id="answer"></div>
+    </div>
+    <div id="dictionary-bar">
+        <div id="stats">
+            <span>Total: <span id="dict-size">0</span></span>
+            <span>In queue: <span id="queue-size">0</span></span>
+        </div>
+        <div id="dictionaries">
+            <select name="dicts" id="dictionaries-select">
+                <option value="">-- Select dictionary --</option>
+            </select>
+        </div>
     </div>
 </div>
 </body>
