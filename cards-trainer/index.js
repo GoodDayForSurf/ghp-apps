@@ -62,12 +62,39 @@ async function load() {
    window.addEventListener('beforeunload', () => {
       try { saveState(); } catch(e) {}
    });
+   window.addEventListener('pagehide', () => {
+      try { saveState(); } catch(e) {}
+   });
+   document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'hidden') {
+         try { saveState(); } catch(e) {}
+      }
+   });
 }
 
 const STORAGE_KEY = 'langtrainer_state_v1';
+const SELECTED_DICT_KEY = 'langtrainer_selected_dict';
+const DICT_CONTENT_PREFIX = 'langtrainer_dict_content_v1-';
+
+function readStorage(key) {
+    try {
+        return localStorage.getItem(key);
+    } catch (e) {
+        console.warn('Failed to read localStorage', e);
+        return null;
+    }
+}
+
+function writeStorage(key, value) {
+    try {
+        localStorage.setItem(key, value);
+    } catch (e) {
+        console.warn('Failed to write localStorage', e);
+    }
+}
 
 function saveState() {
-    if (!(cardState.repeatQueue?.length > 1)) {
+    if (!cardState || !(cardState.repeatQueue?.length > 1)) {
         return;
     }
 
@@ -279,13 +306,110 @@ class CardState {
    }
 }
 
-async function initDictionary(path) {
-    const resp = await fetch(path);
-
-    const DATA = await resp.text();
-
-    PHRASES = DATA.split(/\n\r?\n\r?/);
+function applyDictionaryText(text) {
+    PHRASES = text.split(/\n\r?\n\r?/);
     document.querySelector('#dict-size').textContent = PHRASES.length;
+}
+
+function resyncPhrasesWithQueue() {
+    NEW_PHRASES = [...PHRASES];
+
+    if (!cardState) return;
+
+    cardState.repeatQueue = cardState.repeatQueue.filter((repeatItem) => {
+        const index = NEW_PHRASES.findIndex((p) => p.startsWith(repeatItem.question + '\n'));
+        if (index === -1) return false;
+        NEW_PHRASES.splice(index, 1);
+        return true;
+    });
+
+    const entry = PHRASES.find((p) => p.startsWith(cardState.question + '\n'));
+    if (entry) {
+        cardState.answers = entry.split('\n').slice(1);
+    }
+
+    document.querySelector('#queue-size').textContent = cardState.repeatQueue.length;
+}
+
+function fetchDictionary(path, timeoutMs) {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), timeoutMs);
+    return fetch(path, { signal: controller.signal }).finally(() => clearTimeout(timer));
+}
+
+let dictionaryLoadId = 0;
+let userInteracted = false;
+
+function startTraining() {
+    cardState = restoreState();
+    document.querySelector('#queue-size').textContent = cardState.repeatQueue.length;
+    cardState.next();
+}
+
+async function openDictionary(file) {
+    if (!file) return;
+
+    const loadId = ++dictionaryLoadId;
+    userInteracted = false;
+
+    const selectEl = $('#dictionaries-select');
+    if (selectEl && selectEl.value !== file) {
+        selectEl.value = file;
+    }
+
+    const cacheKey = DICT_CONTENT_PREFIX + file;
+    const cached = readStorage(cacheKey);
+
+    if (cached) {
+        writeStorage(SELECTED_DICT_KEY, file);
+        applyDictionaryText(cached);
+        startTraining();
+    }
+
+    try {
+        const resp = await fetchDictionary(file, cached ? 15000 : 20000);
+        if (loadId !== dictionaryLoadId) return;
+        if (!resp.ok) throw new Error('HTTP ' + resp.status);
+
+        const fresh = await resp.text();
+        if (loadId !== dictionaryLoadId) return;
+        if (!fresh) throw new Error('Empty dictionary');
+
+        if (fresh !== cached) {
+            writeStorage(cacheKey, fresh);
+        }
+
+        if (!cached) {
+            writeStorage(SELECTED_DICT_KEY, file);
+            applyDictionaryText(fresh);
+            startTraining();
+            return;
+        }
+
+        if (fresh === cached) return;
+
+        applyDictionaryText(fresh);
+        if (!userInteracted) {
+            startTraining();
+        } else {
+            resyncPhrasesWithQueue();
+        }
+    } catch (e) {
+        if (loadId !== dictionaryLoadId) return;
+        if (!cached) {
+            console.warn('Failed to load dictionary', e);
+            const previous = readStorage(SELECTED_DICT_KEY);
+            if (previous && previous !== file && readStorage(DICT_CONTENT_PREFIX + previous)) {
+                if (selectEl) selectEl.value = previous;
+                openDictionary(previous);
+                return;
+            }
+            const questionEl = document.querySelector('#question');
+            if (questionEl) questionEl.textContent = 'Failed to load dictionary';
+            return;
+        }
+        console.warn('Failed to refresh dictionary, using saved copy', e);
+    }
 }
 
 load().then( () => {
@@ -298,26 +422,24 @@ load().then( () => {
 
    dictionariesSelectEl.innerHTML = optionsHTML;
 
-
-    $('#dictionaries-select').addEventListener('change', (e) => {
-        if(!e.target.value) {
-            return
-        }
-
-        initDictionary(e.target.value).then(() => {
-            cardState = restoreState();
-            cardState.next();
-            saveState();
-        });
+    dictionariesSelectEl.addEventListener('change', (e) => {
+        openDictionary(e.target.value);
     });
 
-   $('#card').addEventListener('click', () => cardState.next());
+   $('#card').addEventListener('click', () => {
+      userInteracted = true;
+      cardState?.next();
+   });
    document.addEventListener("keyup", function(event) {
       if (event.code === "Space") {
-         cardState.next();
+         userInteracted = true;
+         cardState?.next();
       }
    });
 
-
-  // cardState.next();
+   const savedDict = readStorage(SELECTED_DICT_KEY);
+   if (savedDict && dictionaries.some((dict) => dict.file === savedDict)) {
+      dictionariesSelectEl.value = savedDict;
+      openDictionary(savedDict);
+   }
 })
