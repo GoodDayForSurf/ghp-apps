@@ -1,0 +1,605 @@
+быть
+ser – soy, fui, era // Soy profesor – Я учитель
+
+находиться (быть где-то, находиться в каком-то состоянии)
+estar – estoy, estuve, estaba // Estoy en casa – Я дома
+
+иметь
+tener – tengo, tuve, tenía // Tengo dos hijos – У меня двое детей
+
+делать
+hacer – hago, hice, hacía, haré // Hice la tarea – Я сделал домашнее задание
+
+мочь
+poder – puedo, pude // No puedo venir – Я не могу прийти
+
+сказать
+decir – digo, dije, decía // Dije la verdad – Я сказал правду
+
+идти
+ir – voy, fui, iba // Voy al trabajo – Я иду на работу
+
+видеть
+ver – veo, vi // Vi la película – Я посмотрел фильм
+
+давать
+dar – doy, di, daba // Te doy mi palabra – Я даю тебе слово
+
+знать (что-то новое или иметь глубокое знание о чем-то), уметь
+saber – sé, supe, sabía // Supe la noticia ayer – Я узнал новость вчера
+
+хотеть
+querer – quiero, quise // Quiero aprender español – Я хочу выучить испанский
+
+прибывать (в место)
+llegar – llego, llegué // Llegué tarde – Я приехал поздно
+
+действовать
+actuar - actúo, actué // Actúas de manera poco razonable - Ты действуешь неразумно
+
+проходить
+pasar – paso, pasé // Pasé el examen – Я сдал экзамен
+
+быть должным
+deber // Debo estudiar más – Я должен больше учиться
+
+класть, помещать на место, становиться
+poner – pongo, puse, ponía // Puse el libro en la mesa – Я положил книгу на стол. Me puse furioso - Я пришел в ярость
+
+казаться
+parecer – parezco, parecí // Me parece bien – Мне кажется, это нормально
+
+оставаться
+quedar – quedo, quedé // Me quedé en casa – Я остался дома. Solo quedan dos manzanas - осталось только два яблока
+
+верить
+creer // Creo en ti – Я верю в тебя
+
+лгать
+mentir // Me estás mintiendo - ты мне лжешь
+
+обманывать
+engañar
+
+говорить
+hablar // Hablo español – Я говорю по-испански
+
+носить, иметь при себе, вести (дело, проект), уживаться(ладить/не ладить с кем-то)
+llevar // Llevo gafas – Я ношу очки. llevar + гл. в форме причастия - делать что-то уже какое-то время: Llevo viviendo aqui mucho tiempo - Живу тут уже много времени. llevar + время - быть уже какое-то время: Llevo aquí dos horas — Я здесь уже два часа.
+
+оставлять, позволять
+dejar // Dejé el trabajo – Я оставил работу. Deja que te cuente una historia - позволь рассказать тебе одну историю
+
+следовать, продолжать
+seguir // Sigo adelante – Я продолжаю идти вперёд
+
+выдерживать, терпеть, переносить (физически или морально)
+aguantar //  Solo podíamos aguantar y esperar ayuda - Мы могли только терпеть и ждать помощь
+
+жаловаться
+quejar(se) // Ella siempre se queja del frío - она всегда жалуется на холод
+
+находить
+encontrar – encuentro, encontré // Encontré las llaves – Я нашёл ключи
+
+звать, называть, звонить (по телефону)
+llamar // Me llamo Juan – Меня зовут Хуан
+
+приходить
+venir – vengo, vine // Vine temprano – Я пришёл рано
+
+убивать
+matar
+
+думать (o чем-то)
+pensar (en) – pienso, pensé // Pienso en ti – Я думаю о тебе
+
+выходить
+salir – salgo, salí // Salí temprano – Я вышел рано
+
+измерять
+medir - mido, medí
+
+возвращаться
+volver – vuelvo, volví // Volví ayer – Я вернулся вчера
+
+брать
+tomar // Tomé un café – Я выпил кофе (используется так же в значении пить напитки/лекарства)
+
+знать (быть знакомым)
+conocer – conozco, conocí // Conozco Madrid – Я знаю Мадрид
+
+жить
+vivir // Vivo en España – Я живу в Испании
+
+чувствовать
+sentir – siento, sentí // Siento frío – Мне холодно
+
+смотреть
+mirar // Miro la televisión – Я смотрю телевизор
+
+считать, рассказывать
+contar – cuento, conté // Te cuento la historia – Я рассказываю тебе историю
+
+начинать
+empezar(empiezo, empecé), comenzar(comienzo, comencé) // comenzar - более книжный вариант. Empecé a trabajar – Я начал работать
+
+ждать
+esperar // Espero tu respuesta – Я жду твоего ответа
+
+отправлять
+enviar, mandar // mandar - с оттенком воли (особенно если речь про людей "отправил детей в школу"), enviar - просто факт отправки
+
+искать
+buscar – busco, busqué // Busqué el teléfono – Я искал телефон
+
+ломать, разбивать
+romper // Romper el contrato - расторгнуть контракт
+
+входить
+entrar // Entré en la habitación – Я вошёл в комнату
+
+работать
+trabajar // Trabajo mucho – Я много работаю
+
+писать
+escribir // Escribí una carta – Я написал письмо
+
+терять
+perder – pierdo, perdí // Perdí el dinero – Я потерял деньги
+
+производить
+producir – produzco, produje // La empresa produjo coches – Компания произвела автомобили
+
+происходить (о событии)
+ocurrir // Ocurrió un accidente – Произошла авария
+
+понимать (язык, значение)
+entender – entiendo, entendí // Entiendo español – Я понимаю испанский
+
+просить
+pedir // Pedí ayuda – Я попросил помощи
+
+получать
+recibir // Recibí un mensaje – Я получил сообщение
+
+помнить
+recordar – recuerdo, recordé // Recuerdo ese día – Я помню тот день
+
+заканчивать
+terminar // Terminé el trabajo – Я закончил работу
+
+позволять
+permitir // No me permiten entrar – Мне не позволяют войти
+
+появляться
+aparecer – aparezco, aparecí // Apareció de repente – Он внезапно появился
+
+служить
+servir - sirvo, serví // Sirve para aprender – Это служит для обучения
+
+учиться, обучаться
+aprender
+
+вынимать, извлекать
+sacar – saco, saqué // Saqué el dinero – Я вынул деньги
+
+нуждаться
+necesitar // Necesito ayuda – Мне нужна помощь
+
+поддерживать, сохранять в заданном состоянии
+mantener – mantengo, mantuve // Mantuve la calma – Я сохранял спокойствие
+
+держать (объект физически или придерживаться/утверждать идею)
+sostener - sostengo, sostuve
+
+оказываться, выясняться
+resultar // Resultó difícil – Оказалось трудно
+
+читать
+leer – leo, leí // Leí el libro – Я прочитал книгу
+
+падать
+caer – caigo, caí // Me caí – Я упал
+
+менять
+cambiar // Cambié de opinión – Я изменил мнение
+
+представлять, презентавать
+presentar // Presenté el proyecto – Я представил проект
+
+показывать, демонстрировать
+mostrar // Te muestro mi casa - Я показываю тебе свой дом
+
+создавать
+crear – creo, creé // Creé una empresa – Я создал компанию
+
+открывать
+abrir // Abrí la puerta – Я открыл дверь
+
+слышать
+oír – oigo, oí // Oí un ruido – Я услышал шум
+
+заканчивать (только что)
+acabar // Acabo de llegar – Я только что пришёл. acabar - это по сути "быть на стадии завершения" не путать с terminar - реально закончить, т.е. уже не делать
+
+превращать, конвертировать
+convertir // Convirtió el agua en vino – Он превратил воду в вино
+
+опасаться, бояться
+temer // Temo que no venga - Боюсь, что он не придёт
+
+приносить
+traer – traigo, traje // Traje un regalo – Я принёс подарок
+
+разделять
+partir // Partí el pan – Я разломал хлеб
+
+плавать (держаться на воде)
+flotar // не путать с nadar - передвигаться по воде. flotar - находиться на поверхности жидкости
+
+погружаться, проваливаться
+hundir(se) // La crisis hundió la empresa. — кризис потопил компанию. El barco se hunde — корабль тонет
+
+кричать
+gritar
+
+умирать
+morir – muero, morí // Murió joven – Он умер молодым
+
+принимать
+aceptar // Acepté la oferta – Я принял предложение
+
+реализовать
+realizar – realizo, realicé // Realicé el plan – Я реализовал план
+
+предполагать
+suponer – supongo, supuse // Supuse que era verdad – Я предположил, что это правда
+
+понимать (смысл)
+comprender // Comprendo el problema – Я понимаю проблему
+
+достигать, добиваться
+conseguir (consigo, conseguí), lograr, alcanzar (alcanzo, alcancé) // conseguir - акцент на усилии, lograr - суметь - акцент на факт того что получилось, alcanzar - акцент на степень достижениия
+
+объяснять
+explicar – explico, expliqué // Expliqué la lección – Я объяснил урок
+
+спрашивать
+preguntar // Pregunté la hora – Я спросил время
+
+трогать, играть (на инструменте)
+tocar – toco, toqué // Toco la guitarra – Я играю на гитаре
+
+узнавать, признавать
+reconocer – reconozco, reconocí // Reconocí mi error – Я признал свою ошибку
+
+изучать
+estudiar // Estudio español – Я изучаю испанский
+
+рождаться
+nacer – nazco, nací // Nací en 1980 – Я родился в 1980 году
+
+руководить
+dirigir – dirijo, dirigí // Dirijo el equipo – Я руковожу командой
+
+бежать
+correr // Corrí rápido – Я бежал быстро
+
+использовать
+utilizar – utilizo, utilicé // Utilicé el programa – Я использовал программу
+
+платить
+pagar – pago, pagué // Pagué la cuenta – Я оплатил счёт
+
+помогать
+ayudar // Ayudé a mi amigo – Я помог своему другу
+
+нравиться
+gustar // Me gusta el café – Мне нравится кофе
+
+играть
+jugar – juego, jugué // Jugué al fútbol – Я играл в футбол
+
+слушать
+escuchar // Escucho música – Я слушаю музыку
+
+выполнять
+cumplir // Cumplí mi promesa – Я выполнил своё обещание
+
+предлагать
+ofrecer – ofrezco, ofrecí // Ofrecí ayuda – Я предложил помощь
+
+открывать, делать открытие
+descubrir // Descubrí la verdad – Я открыл правду
+
+поднимать
+levantar // Levanté la mano – Я поднял руку
+
+пытаться
+intentar, tratar de, procurar // intentar - акцент на результат (получилось или нет), tratar de - акцент на попытку (стараться), procurar - стремиться обсепечить
+
+помещаться, быть возможным/уместным
+caber // Aquí caben cinco personas - Тут поместятся 5 человек. No me cabe otra opción - У меня нет другого выбора
+
+включать, зажигать, разжигать
+encender // Encendí la luz - я включил свет
+
+пробовать, попробовать
+probar // Probé hacerlo de otra manera — Я попробовал сделать это другим способом.
+
+предлагать, рекомендовать, намекать
+sugerir - sugiero, sugerí // Sugiero descansar un poco — Я предлагаю немного отдохнуть.
+
+водить, управлять, cправляться
+manejar // Manejar un negocio - управлять бизнесом
+
+останавливать / прекращать действие
+parar // Hay que parar la discusión - Нужно остановить спор
+
+требовать, настаивать
+exigir // Exijo una explicación - Я требую объяснения
+
+использовать
+usar // Uso esta herramienta – Я использую этот инструмент
+
+иметь привычку (что-то делать)
+soler // В основном используется в связке с другими глаголами. Suelo levantarme temprano - обычно я встаю рано
+
+совать, вставлять, помещать что-то внутрь, вовлекать
+meter // Metió la llave en la cerradura - Он вставил ключ в замок
+
+пачкать, загрязнять
+manchar // Manché la camisa – Я испачкал рубашку
+
+заворачивать, оборачивать
+envolver // Envolví el regalo – Я завернул подарок
+
+избегать
+evitar // Evité el problema – Я избежал проблемы
+
+посещать, присутствовать
+asistir a // Asistí a la reunión – Я присутствовал на встрече
+
+ходить пешком
+caminar // акцент именно на способе (пешком)
+
+ходить (в общем смысле двигаться-функционировать)
+andar // смысловой акцент на движении-перемещении. Как в русском: "часы не ходят"
+
+отзывать, убрать, снять
+retirar // Retiré el dinero – Я снял деньги
+
+делиться
+compartir // Compartí la información – Я поделился информацией
+
+предупреждать
+avisar // Te avisé – Я тебя предупредил
+
+поливать
+regar // riego el jardín. — я поливаю сад
+
+наливать
+verter // Verter agua en el vaso — налить воду в стакан
+
+проливать
+derramar // Derramó el café. — он пролил кофе
+
+оживлять, давать энергию, побуждать
+animar(se) // Le animé a intentarlo — я его подбодрил попробовать. Me animé a hablar — я решился заговорить
+
+решать (что то сделать)
+decidir // Ya decidí. Voy a coger la pizza — Я уже решил. Возьму пиццу. No me decido — не могу выбрать
+
+бросать
+echar // Глагол с довольно широким спектром с акцентом на перемещение. Echa esto en la caja — Закинь это в коробку. Echamos un rato hablando — Мы немного поболтали
+
+тратить / расходовать / изнашивать
+gastar // Gasto mucho dinero en comida - Я трачу много денег на еду. He gastado los zapatos — Я сносил обувь
+
+экономить, сберегать, откладывать
+ahorrar // Estoy ahorrando dinero — Я коплю деньги
+
+злить(ться)
+enfadar(se) // Eso me enfada - Это меня злит. Se enfadó conmigo- Он разозлился на меня
+
+убегать, сбегать, избегать
+huir // huir - это сбегать импульсивно, эмоционально. evitar - избежать расчетливо, осознанно. he huido del problema — я сбежал от проблемы
+
+судить, осуждать, оценивать
+juzgar // Esto me permite juzgar la calidad - Это мне позволяет судить о качестве
+
+объединять, собирать вместе
+juntar
+
+удалять, стирать (данные, рисунок, надпись)
+borrar // ¿Puedes borrar ese mensaje? — Можешь удалить это сообщение?
+
+бороться, сражаться
+luchar // Tengo una razón para luchar e intentar ser mejor - У меня есть причина бороться и попытаться стать лучше
+
+запускать, выпускать (что то новое)
+lanzar // Ella acaba de lanzar la nueve album - она только что выпустила новый альбом
+
+договариваться, вести переговоры
+negociar
+
+нюхать, пахнуть
+oler - huelo, hueles // Huelo algo raro — я чувствую странный запах
+
+убирать, снимать, забирать
+quitar // quitar la mesa — убрать со стола
+
+выключать/гасить/тушить
+apagar
+
+разрабатывать, развивать, develop
+desarrollar
+
+иметь дело (с кем-то / чем-то), обращаться с чем-то, обрабатывать/лечить, пытаться (стараться)
+tratar // el trato - сделка. tratar de + инфинитив = пытаться. Ella trataba esto con cuidado y trataba de ser amable - Она отнеслась к этому c осторожностью и старалась быть доброй
+
+швырять
+botar // более резко и эмоционально чем tirar
+
+хватать
+agarrar // акцент на скорость и удержание силой, хотя иногда используется как синоним coger - "взять себе". не путать с pillar - поймать, где акцент на ловкость, удачу и результат
+
+опусташать, разрушать
+devastar
+
+пугать
+asustar
+
+предупреждать, предостерегать
+advertir
+
+прятаться
+esconder(se)
+
+складывать, удвоить
+doblar
+
+дрожать, трястись
+temblar
+
+растягивать, тянуть
+estirar
+
+стремиться обеспечить, стараться
+procurar // Debemos procurar mostrar el respeto - Мы должны стремиться проявлять уважение
+
+очень рано вставать
+madrugar
+
+развязать (в т.ч. в значении вызвать, спровоцировать)
+desatar // Este puede desatar una tormenta - это может вызвать бурю
+
+приближаться, подходить
+acercar(se) - acerco, acerqué, acercaba
+
+хмурить, морщить
+fruncir // fruncir el ceño - хмурить брови
+
+приветствовать, принимать (гостей)
+acoger // acogedor - приветливый, уютный
+
+преподавать
+enseñar
+
+сходиться, соответствовать, происходить как-надо
+cuadrar // ahí los números empiezan a no cuadrar - тут числа начали не сходиться
+
+облегчать, расслаблять, смягчать
+aliviar
+
+прыгать, пропускать
+saltar // saltar - прыгать, saltarse - пропускать
+
+бороться, драться, ссориться
+pelear
+
+соприкасаться, смыкать, прикреплять, ударять, клеится
+pegar // широко используется в разных ситуациях. No pegan nada. — Они не подходят друг другу. Pegar un papel — приклеить бумагу. No le pegues — Не бей его (для pegar, в значении ударить, объект которого бьют это косвенное дополнение поэтому le)
+
+выравнивать, приводить в соответствие
+emparejar
+
+проникуть, проскользунть
+colar(se) // colar - процеживать, colarse - проникнуть, пробраться
+
+вызвать, послужить причиной
+causar
+
+сходить с ума (в т.ч. с позитивным оттенком), офигивать
+flipar // Ella va a flipar cuando te vea - Она сойдет с ума когда тебя увидит. Me flipa - приводит меня в восторг
+
+беспокоить, раздражать
+molestar
+
+выговариться, выпустить пар
+desahogarse // ahogarse - задохнуться, утонуть
+
+использовать с пользой
+aprovechar
+
+уделять (внимание), оказывать (содействие), обеспечивать (чем-то)
+prestar
+
+удовлетворять, учитывать
+atender // debes atender las necesidades de la gente - Ты должен учитывать / удовлетворять потребности людей
+
+смягчать, сглаживать
+suavizar // suave - нежный, мягкий (в т.ч. и о вкусе)
+
+орать, визжать
+chillar
+
+распределять, делать доставку
+repartir
+
+притворяться, делать вид
+fingir
+
+путать
+confundir
+
+приводить в ужас
+aterrar // связано со словом terror - ужас. но иногда используется в значении "заземлять" (электричество) и даже приземлиться (tierra- земля)
+
+расти, взрослеть, развиваться
+crecer
+
+уменьшать, снижать
+disminuir
+
+преодолевать
+superar
+
+выполнять, испольнять, играть роль
+desempeñar // desempeñar un papel - выполнять роль (устойчивое выр.)
+
+нажимать клавиши, печатать, вводить текст
+teclear // tecla - клавиша
+
+набрасываться
+abalanzar (sobre) // El perro se abalanzó sobre mí - Собака набросилась на меня
+
+доверять
+fiar
+
+признавать
+admitir // Yo no admito nada - я ни в чем не признаюсь
+
+не соглашаться, возражать, спорить
+discrepar // Podemos discrepar, pero el respeto es fundamental - Можно не соглашаться, но уважать необходимо.
+
+поймать, ухватить
+pillar // в отличие от coger который нейтральный - "взять"; agarrar - акцент на силу и удержание; pillar - акцент на ловкость и результат (ухватить в т.ч. в зн. понять)
+
+бесить, царапать
+rayar // если просто rayar то обычно в значении царапать, me raya - меня раздражает, бесит, напрягает. la raya - черта, грань
+
+быть занятым
+estar liado // lio - беспорядок, бардак
+
+работать
+trabajar, currar // currar - разговорное, неформальное
+
+происходить, случаться
+suceder
+
+повредить, причинять вред, портить
+dañar
+
+спасать, сохранять
+salvar
+
+привязывать, завязывать, связывать
+atar
+
+вешать, висеть
+colgar
+
+выяснять, разбираться
+averiguar

@@ -1,0 +1,377 @@
+грязь
+barro, suciedad, contaminación // barro - грязь типа земли, suciedad - более обобщенно, contaminación - научно, загрязнение
+
+иголка
+aguja
+
+ножницы
+tijeras
+
+пуговица
+botón
+
+молния (на одежде)
+cremallera
+
+нитка
+hilo
+
+верёвка
+cuerda
+
+шнур
+cordón
+
+скотч
+cinta adhesiva
+
+клей
+pegamento
+
+спички
+cerillas
+
+зажигалка
+encendedor
+
+свеча
+vela
+
+фонарик
+linterna
+
+батарейка
+pila
+
+удлинитель
+alargador
+
+молоток
+martillo
+
+гвоздь
+clavo
+
+шуруп
+tornillo
+
+отвёртка
+destornillador
+
+плоскогубцы
+alicates
+
+гаечный ключ
+llave inglesa
+
+дрель
+taladro
+
+пила, горный хребет
+sierra
+
+рулетка (измерительная)
+cinta métrica
+
+лестница
+escalera
+
+шерсть (пряжа)
+lana
+
+перчатки
+guantes
+
+шарф
+bufanda
+
+фартук
+delantal
+
+ведёрко
+cubito
+
+устройство, прибор
+dispositivo
+
+таз
+palangana
+
+прищепка
+pinza
+
+корзина
+cesta
+
+аптечка
+botiquín
+
+пластырь
+tirita
+
+бинт
+venda
+
+бизнес, дело
+negocio
+
+щётка
+cepillo
+
+тряпка
+trapo
+
+салфетка
+servilleta
+
+контейнер
+recipiente
+
+замок (навесной)
+candado
+
+ключи
+llaves
+
+блокнот
+cuaderno
+
+ручка
+bolígrafo
+
+карандаш
+lápiz
+
+эскиз, набросок
+boceto
+
+роса
+rocío
+
+костер
+hoguera
+
+ткань
+tela
+
+ствол, бревно
+tronco
+
+метла
+escoba
+
+туман
+niebla
+
+буря, шторм
+tormenta
+
+сельдерей
+apio
+
+кусок
+trozo, pedazo // Сложно четко уловить разницу между trozo и pedazo - скорее синонимы. Возможно trozo имеет акцент на "небольшой части чего-то" тогда как pedazo - просто часть, без акцента на размер
+
+дым
+humo
+
+бровь
+ceja, ceño // ceño - не просто брови а именно нахмуренные. fruncir el ceño - хмурить брови
+
+бедро
+cadera
+
+локоть
+codo
+
+спина
+espalda, lomo // lomo - чаще применяется к животным, и ближе к русск. хребет. В разг. речи может отн. и к человеку
+
+живот
+panza
+
+зуб
+diente
+
+пятка, корешок книги, каблук
+talón
+
+хвост, очередь
+cola
+
+маринованный огурец
+pepenillo
+
+кастрюля
+olla, cazo // cazo - ковшик
+
+миска
+cuenco
+
+угол
+esquina, ángulo // esquina - угол помещения, здания или улицы. ángulo - угол в геометрии
+
+мудрец
+sabio
+
+рабочие
+los obreros
+
+глубина
+profundidad, hondo // profundo, hondo - глубокий. hondo - более материальная, разговорная. profundidad - более абстрактно, научно
+
+дно
+fondo
+
+берег
+orilla
+
+поверхность
+superficie
+
+место
+sitio / lugar // sitio - место в смысле размера или пространства. No hay sitio aquí - тут нет места. \n lugar - место с пространстве. El lugar donde nací - Место где я родился
+
+вызов, задача, испытание
+reto, desafío // reto - более позитивный оттенок, ближе к англ. challenge. Desafío - вызов, трудность, препятствие, испытание (более негативный оттенок)
+
+ложь / неправда
+mentira
+
+ягода
+baya // fresas — клубника, arándanos — черника, frambuesas — малина
+
+предупреждение / уведомление
+aviso
+
+долг
+deuda // не путать с duda - сомнение
+
+возраст
+edad
+
+дата
+fecha
+
+образ жизни
+forma de ser
+
+победитель
+ganador
+
+рана
+herida
+
+намерение
+intención
+
+налог
+impuesto
+
+работа / стройка / произведение
+obra
+
+драгоценность
+joya
+
+закон
+ley
+
+достижение
+logro
+
+вор
+ladrón
+
+задача/задание
+tarea
+
+экран
+pantalla
+
+сеть (в т.ч. электро и коммуникационная)
+red
+
+уверенность
+certeza
+
+недостаток
+desventaja
+
+мужество, храбрость
+valentía
+
+разрыв
+ruptura
+
+стыд
+vergüenza
+
+гнев, бешенство
+rabia
+
+доход
+ingreso
+
+должность
+puesto
+
+дорожная пробка, затор
+atasco
+
+ферма, хозяйство
+granja
+
+сделка
+el trato // от глагола tratar - обращаться, иметь отношение с кем-то или чем-то
+
+бок, с боку, борт
+costado
+
+комната, четвертый
+cuarto // более бытовой синоним habitacion
+
+катастрофа
+desastre
+
+тропа
+senda // Podemos hacerlo mucho mejor y volver a la buena senda - Мы можем действовать намного лучше и вернуться на правильный путь
+
+отрезок пути
+trecho
+
+миг, момент
+instante
+
+красота
+belleza
+
+причина, разум
+la razón
+
+помошик, ассистент
+auxiliar
+
+способность
+capacidad
+
+стрелка, стрела
+flecha
+
+соперник, конкурент
+rival
+
+место жительства, адрес, жилище
+domicilio
+
+оттенок, нюанс
+matiz
+
+беспорядок, бардак
+lío
+
+работа
+trabajo, curro // curro - разговорное, trabajo - более формальное, нейтральное
+
+вред, повреждение, ущерб
+daño

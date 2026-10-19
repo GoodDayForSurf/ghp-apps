@@ -1,0 +1,659 @@
+﻿У меня есть ключи
+Tengo las llaves // Presente, yo — tengo
+
+У тебя есть блокнот
+Tienes el cuaderno // Presente, tú — tienes
+
+У неё есть новая работа
+Ella tiene un trabajo nuevo // Presente, él/ella/usted — tiene
+
+У нас есть тёплые перчатки
+Tenemos guantes calientes // Presente, nosotros — tenemos
+
+У вас есть большая корзина
+Tenéis una cesta grande // Presente, vosotros — tenéis
+
+У них есть долг
+Tienen una deuda // Presente, ellos/ustedes — tienen
+
+Я голоден
+Tengo hambre // Presente, yo — tengo
+
+Ты хочешь пить
+Tienes sed // Presente, tú — tienes
+
+Ему холодно
+Él tiene frío // Presente, él/ella/usted — tiene
+
+Нам жарко
+Tenemos calor // Presente, nosotros — tenemos
+
+Вам некогда
+Tenéis prisa // Presente, vosotros — tenéis
+
+Им страшно
+Tienen miedo // Presente, ellos/ustedes — tienen
+
+Мне двадцать лет
+Tengo veinte años // Presente, yo — tengo
+
+Тебе нужно работать
+Tienes que trabajar // Presente, tú — tienes que
+
+Ей повезло
+Tiene suerte // Presente, él/ella/usted — tiene
+
+Нам нужно иметь терпение
+Tenemos que tener paciencia // Presente, nosotros — tenemos que; infinitivo — tener
+
+Вам пора идти
+Tenéis que irse // Presente, vosotros — tenéis que
+
+Им нужно сделать задание
+Tienen que hacer la tarea // Presente, ellos/ustedes — tienen que
+
+У меня вчера была удача
+Ayer tuve suerte // Pretérito indefinido, yo — tuve
+
+У тебя был страх
+Tuviste miedo // Pretérito indefinido, tú — tuviste
+
+Он был прав
+Él tuvo razón // Pretérito indefinido, él/ella/usted — tuvo
+
+У нас был затор на дороге
+Tuvimos un atasco // Pretérito indefinido, nosotros — tuvimos
+
+У вас была спешка
+Tuvisteis prisa // Pretérito indefinido, vosotros — tuvisteis
+
+У них была жажда
+Tuvieron sed // Pretérito indefinido, ellos/ustedes — tuvieron
+
+Я имел блокнот и ручку
+Tuve un cuaderno y un bolígrafo // Pretérito indefinido, yo — tuve
+
+Ты имел право на отдых
+Tuviste derecho al descanso // Pretérito indefinido, tú — tuviste
+
+Она имела намерение помочь
+Ella tuvo la intención de ayudar // Pretérito indefinido, él/ella/usted — tuvo
+
+Мы имели проблемы с экраном
+Tuvimos problemas con la pantalla // Pretérito indefinido, nosotros — tuvimos
+
+Вы имели смелость войти
+Tuvisteis valentía para entrar // Pretérito indefinido, vosotros — tuvisteis
+
+Они имели долг перед нами
+Tuvieron una deuda con nosotros // Pretérito indefinido, ellos/ustedes — tuvieron
+
+Когда я был ребёнком, мне было десять лет
+Cuando era niño, tenía diez años // Imperfecto, yo/él/ella/usted — tenía
+
+Раньше ты боялся высокой лестницы
+Antes tenías miedo de la escalera alta // Imperfecto, tú — tenías
+
+Она всегда была права в таких вещах
+Ella siempre tenía razón en estas cosas // Imperfecto, yo/él/ella/usted — tenía
+
+У нас раньше был свой бизнес
+Antes teníamos nuestro propio negocio // Imperfecto, nosotros — teníamos
+
+Вы часто были голодны после работы
+A menudo teníais hambre después del trabajo // Imperfecto, vosotros — teníais
+
+У них всегда была аптечка дома
+Siempre tenían un botiquín en casa // Imperfecto, ellos/ustedes — tenían
+
+Я раньше имел много свободного времени
+Tenía mucho tiempo libre // Imperfecto, yo/él/ella/usted — tenía
+
+Ты раньше имел стыд перед людьми
+Tenías vergüenza delante de la gente // Imperfecto, tú — tenías
+
+Он имел привычку врать
+Tenía la costumbre de mentir // Imperfecto, yo/él/ella/usted — tenía
+
+Мы имели уютный дом
+Teníamos una casa acogedora // Imperfecto, nosotros — teníamos
+
+Вы имели простую задачу
+Teníais una tarea sencilla // Imperfecto, vosotros — teníais
+
+Они имели красивый сад
+Tenían un jardín lindo // Imperfecto, ellos/ustedes — tenían
+
+Я уже ел сегодня, я не голоден
+Hoy ya he comido, no he tenido hambre // Pretérito perfecto, yo — he tenido
+
+Ты уже имел удачу в этом деле
+Ya has tenido suerte en este asunto // Pretérito perfecto, tú — has tenido
+
+Он уже имел успех в работе
+Ha tenido éxito en el trabajo // Pretérito perfecto, él/ella/usted — ha tenido
+
+Мы уже имели такие проблемы
+Ya hemos tenido estos problemas // Pretérito perfecto, nosotros — hemos tenido
+
+Вы уже имели этот разговор
+Ya habéis tenido esta conversación // Pretérito perfecto, vosotros — habéis tenido
+
+Они уже имели рану на руке
+Ya han tenido una herida en la mano // Pretérito perfecto, ellos/ustedes — han tenido
+
+Я никогда не имел такого достижения
+Nunca he tenido un logro así // Pretérito perfecto, yo — he tenido
+
+Ты когда-нибудь имел долг?
+¿Alguna vez has tenido una deuda? // Pretérito perfecto, tú — has tenido
+
+Она уже имела опыт в этом
+Ella ya ha tenido experiencia en esto // Pretérito perfecto, él/ella/usted — ha tenido
+
+Мы уже имели встречу с ним
+Ya hemos tenido una reunión con él // Pretérito perfecto, nosotros — hemos tenido
+
+Вы уже имели шанс попробовать
+Ya habéis tenido la oportunidad de probar // Pretérito perfecto, vosotros — habéis tenido
+
+Они уже имели катастрофу в прошлом году
+El año pasado ya han tenido un desastre // Pretérito perfecto, ellos/ustedes — han tenido
+
+К тому моменту я уже имел ответ
+Para entonces ya había tenido la respuesta // Pluscuamperfecto, yo/él/ella/usted — había tenido
+
+Ты уже имел ключи, когда я пришёл
+Ya habías tenido las llaves cuando llegué // Pluscuamperfecto, tú — habías tenido
+
+Он уже имел право до нашего разговора
+Ya había tenido razón antes de nuestra conversación // Pluscuamperfecto, yo/él/ella/usted — había tenido
+
+Мы уже имели затор, когда вы позвонили
+Ya habíamos tenido un atasco cuando llamasteis // Pluscuamperfecto, nosotros — habíamos tenido
+
+Вы уже имели задание до урока
+Ya habíais tenido la tarea antes de la clase // Pluscuamperfecto, vosotros — habíais tenido
+
+Они уже имели долг до сделки
+Ya habían tenido una deuda antes del trato // Pluscuamperfecto, ellos/ustedes — habían tenido
+
+Я уже имел аптечку в сумке
+Ya había tenido el botiquín en la bolsa // Pluscuamperfecto, yo/él/ella/usted — había tenido
+
+Ты уже имел страх высоты в детстве
+De niño ya habías tenido miedo a las alturas // Pluscuamperfecto, tú — habías tenido
+
+Она уже имела намерение уйти
+Ya había tenido la intención de irse // Pluscuamperfecto, yo/él/ella/usted — había tenido
+
+Мы уже имели доход от бизнеса
+Ya habíamos tenido ingresos del negocio // Pluscuamperfecto, nosotros — habíamos tenido
+
+Вы уже имели гнев на него
+Ya habíais tenido rabia hacia él // Pluscuamperfecto, vosotros — habíais tenido
+
+Они уже имели красоту вокруг себя
+Ya habían tenido belleza a su alrededor // Pluscuamperfecto, ellos/ustedes — habían tenido
+
+Завтра у меня будет время
+Mañana tendré tiempo // Futuro, yo — tendré
+
+Ты будешь иметь ключи
+Tendrás las llaves // Futuro, tú — tendrás
+
+Она будет иметь успех
+Ella tendrá éxito // Futuro, él/ella/usted — tendrá
+
+Мы будем голодны к обеду
+Tendremos hambre a la hora de comer // Futuro, nosotros — tendremos
+
+Вы будете иметь удачу
+Tendréis suerte // Futuro, vosotros — tendréis
+
+Они будут иметь новую работу
+Tendrán un trabajo nuevo // Futuro, ellos/ustedes — tendrán
+
+Я буду иметь блокнот с собой
+Tendré el cuaderno conmigo // Futuro, yo — tendré
+
+Тебе будет страшно в темноте
+Tendrás miedo en la oscuridad // Futuro, tú — tendrás
+
+Он будет прав, уверен
+Tendrá razón, estoy seguro // Futuro, él/ella/usted — tendrá
+
+Мы будем иметь простую задачу
+Tendremos una tarea sencilla // Futuro, nosotros — tendremos
+
+Вы будете иметь перчатки на улице
+Tendréis guantes en la calle // Futuro, vosotros — tendréis
+
+Они будут иметь долг ещё месяц
+Tendrán una deuda un mes más // Futuro, ellos/ustedes — tendrán
+
+Я бы имел больше времени
+Tendría más tiempo // Condicional, yo/él/ella/usted — tendría
+
+Ты бы испугался
+Tendrías miedo // Condicional, tú — tendrías
+
+Она бы была права
+Ella tendría razón // Condicional, yo/él/ella/usted — tendría
+
+Мы бы имели уютный дом
+Tendríamos una casa acogedora // Condicional, nosotros — tendríamos
+
+Вы бы имели удачу
+Tendríais suerte // Condicional, vosotros — tendríais
+
+Они бы имели вину
+Tendrían la culpa // Condicional, ellos/ustedes — tendrían
+
+Я бы имел терпение
+Tendría paciencia // Condicional, yo/él/ella/usted — tendría
+
+Ты бы имел жажду после прогулки
+Tendrías sed después del paseo // Condicional, tú — tendrías
+
+Он бы имел храбрость сказать правду
+Tendría valentía para decir la verdad // Condicional, yo/él/ella/usted — tendría
+
+Мы бы имели доход от этого дела
+Tendríamos ingresos de este negocio // Condicional, nosotros — tendríamos
+
+Вы бы имели стыд на его месте
+Tendríais vergüenza en su lugar // Condicional, vosotros — tendríais
+
+Они бы имели проблемы с законом
+Tendrían problemas con la ley // Condicional, ellos/ustedes — tendrían
+
+К завтрашнему дню я уже буду иметь ответ
+Para mañana ya habré tenido la respuesta // Futuro perfecto, yo — habré tenido
+
+К пяти часам ты уже будешь иметь ключи
+Para las cinco ya habrás tenido las llaves // Futuro perfecto, tú — habrás tenido
+
+К тому времени он уже будет иметь успех
+Para entonces ya habrá tenido éxito // Futuro perfecto, él/ella/usted — habrá tenido
+
+К пятнице мы уже будем иметь задание
+Para el viernes ya habremos tenido la tarea // Futuro perfecto, nosotros — habremos tenido
+
+К ужину вы уже будете иметь аппетит
+Para la cena ya habréis tenido hambre // Futuro perfecto, vosotros — habréis tenido
+
+К понедельнику они уже будут иметь результат
+Para el lunes ya habrán tenido el resultado // Futuro perfecto, ellos/ustedes — habrán tenido
+
+Я бы уже имел ответ, если бы знал
+Habría tenido la respuesta si lo supiera // Condicional perfecto, yo/él/ella/usted — habría tenido
+
+Ты бы уже имел удачу в другой ситуации
+Habrías tenido suerte en otra situación // Condicional perfecto, tú — habrías tenido
+
+Он бы уже имел успех без этой ошибки
+Habría tenido éxito sin este error // Condicional perfecto, yo/él/ella/usted — habría tenido
+
+Мы бы уже имели время, если бы не опоздали
+Habríamos tenido tiempo si no hubiéramos llegado tarde // Condicional perfecto, nosotros — habríamos tenido
+
+Вы бы уже имели ключи, если бы спросили
+Habríais tenido las llaves si hubierais preguntado // Condicional perfecto, vosotros — habríais tenido
+
+Они бы уже имели долг, если бы взяли кредит
+Habrían tenido una deuda si hubieran pedido un préstamo // Condicional perfecto, ellos/ustedes — habrían tenido
+
+Я бы уже имел терпение, но устал
+Habría tenido paciencia, pero me cansé // Condicional perfecto, yo/él/ella/usted — habría tenido
+
+Ты бы уже имел страх, если бы видел это
+Habrías tenido miedo si lo hubieras visto // Condicional perfecto, tú — habrías tenido
+
+Она бы уже имела право, если бы знала факты
+Habría tenido razón si hubiera conocido los hechos // Condicional perfecto, yo/él/ella/usted — habría tenido
+
+Мы бы уже имели доход, если бы начали раньше
+Habríamos tenido ingresos si hubiéramos empezado antes // Condicional perfecto, nosotros — habríamos tenido
+
+Вы бы уже имели задание, если бы пришли вовремя
+Habríais tenido la tarea si hubierais llegado a tiempo // Condicional perfecto, vosotros — habríais tenido
+
+Они бы уже имели рану, если бы упали
+Habrían tenido una herida si se hubieran caído // Condicional perfecto, ellos/ustedes — habrían tenido
+
+Надеюсь, у меня будет время
+Espero que tenga tiempo // Presente de subjuntivo / Imperativo, usted — tenga
+
+Желаю тебе хорошего дня
+Espero que tengas un buen día // Presente de subjuntivo, tú — tengas
+
+Важно, чтобы он имел терпение
+Es importante que tenga paciencia // Presente de subjuntivo / Imperativo, usted — tenga
+
+Нужно, чтобы мы имели план
+Es necesario que tengamos un plan // Presente de subjuntivo / Imperativo, nosotros — tengamos
+
+Берегите себя!
+Quiero que tengáis cuidado // Presente de subjuntivo, vosotros — tengáis
+
+Сомневаюсь, что они правы
+Dudo que tengan razón // Presente de subjuntivo / Imperativo, ellos/ustedes — tengan
+
+Может быть, у меня будет удача
+Es posible que tenga suerte // Presente de subjuntivo / Imperativo, usted — tenga
+
+Не думаю, что у тебя есть страх
+No creo que tengas miedo // Presente de subjuntivo, tú — tengas
+
+Пусть у неё будет успех
+Ojalá tenga éxito // Presente de subjuntivo / Imperativo, usted — tenga
+
+Просят, чтобы мы имели терпение
+Piden que tengamos paciencia // Presente de subjuntivo / Imperativo, nosotros — tengamos
+
+Жаль, что у вас нет времени
+Es una lástima que no tengáis tiempo // Imperativo negativo, vosotros — no tengáis
+
+Не верю, что у них есть вина
+No creo que tengan la culpa // Presente de subjuntivo / Imperativo, ellos/ustedes — tengan
+
+Если бы у меня были деньги, я бы купил дом
+Si yo tuviera dinero, compraría una casa // Imperfecto de subjuntivo, yo/él/ella/usted — tuviera
+
+Если бы ты боялся, ты бы не пошёл
+Si tuvieras miedo, no irías // Imperfecto de subjuntivo, tú — tuvieras
+
+Если бы он был прав, всё было бы иначе
+Si tuviera razón, todo sería diferente // Imperfecto de subjuntivo, yo/él/ella/usted — tuviera
+
+Если бы у нас было время, мы бы помогли
+Si tuviéramos tiempo, ayudaríamos // Imperfecto de subjuntivo, nosotros — tuviéramos
+
+Если бы у вас была удача, вы бы выиграли
+Si tuvierais suerte, ganaríais // Imperfecto de subjuntivo, vosotros — tuvierais
+
+Если бы у них был голод, они бы поели
+Si tuvieran hambre, comerían // Imperfecto de subjuntivo, ellos/ustedes — tuvieran
+
+Я бы поехал, если бы имел ключи
+Iría si tuviera las llaves // Imperfecto de subjuntivo, yo/él/ella/usted — tuviera
+
+Ты бы остался, если бы имел смелость
+Te quedarías si tuvieras valentía // Imperfecto de subjuntivo, tú — tuvieras
+
+Она бы согласилась, если бы имела намерение
+Ella aceptaría si tuviera la intención // Imperfecto de subjuntivo, yo/él/ella/usted — tuviera
+
+Мы бы купили, если бы имели доход
+Compraríamos si tuviéramos ingresos // Imperfecto de subjuntivo, nosotros — tuviéramos
+
+Вы бы поняли, если бы имели опыт
+Entenderíais si tuvierais experiencia // Imperfecto de subjuntivo, vosotros — tuvierais
+
+Они бы вернули, если бы имели совесть
+Devolverían si tuvieran conciencia // Imperfecto de subjuntivo, ellos/ustedes — tuvieran
+
+Рад, что я был прав
+Me alegra que haya tenido razón // Pretérito perfecto de subjuntivo, yo/él/ella/usted — haya tenido
+
+Хорошо, что у тебя была удача
+Me alegra que hayas tenido suerte // Pretérito perfecto de subjuntivo, tú — hayas tenido
+
+Возможно, он уже имел успех
+Es posible que haya tenido éxito // Pretérito perfecto de subjuntivo, yo/él/ella/usted — haya tenido
+
+Сомневаюсь, что мы имели вину
+Dudo que hayamos tenido la culpa // Pretérito perfecto de subjuntivo, nosotros — hayamos tenido
+
+Жаль, что вы не имели времени
+Es una lástima que no hayáis tenido tiempo // Pretérito perfecto de subjuntivo, vosotros — hayáis tenido
+
+Не думаю, что они имели страх
+No creo que hayan tenido miedo // Pretérito perfecto de subjuntivo, ellos/ustedes — hayan tenido
+
+Надеюсь, что я уже имел ответ
+Espero que ya haya tenido la respuesta // Pretérito perfecto de subjuntivo, yo/él/ella/usted — haya tenido
+
+Хорошо, что ты уже имел ключи
+Me alegra que ya hayas tenido las llaves // Pretérito perfecto de subjuntivo, tú — hayas tenido
+
+Важно, чтобы она уже имела опыт
+Es importante que ya haya tenido experiencia // Pretérito perfecto de subjuntivo, yo/él/ella/usted — haya tenido
+
+Нужно, чтобы мы уже имели план
+Es necesario que ya hayamos tenido un plan // Pretérito perfecto de subjuntivo, nosotros — hayamos tenido
+
+Жаль, что вы уже имели проблемы
+Es una lástima que ya hayáis tenido problemas // Pretérito perfecto de subjuntivo, vosotros — hayáis tenido
+
+Хотел бы я, чтобы они уже имели результат
+Ojalá ya hayan tenido el resultado // Pretérito perfecto de subjuntivo, ellos/ustedes — hayan tenido
+
+Если бы я имел время, всё было бы иначе
+Si hubiera tenido tiempo, todo habría sido diferente // Pluscuamperfecto de subjuntivo, yo/él/ella/usted — hubiera tenido
+
+Как жаль, что у тебя не было удачи в тот день
+Ojalá hubieras tenido suerte ese día // Pluscuamperfecto de subjuntivo, tú — hubieras tenido
+
+Сомневаюсь, что он имел право
+Dudo que hubiera tenido razón // Pluscuamperfecto de subjuntivo, yo/él/ella/usted — hubiera tenido
+
+Если бы мы имели ключи, мы бы вошли
+Si hubiéramos tenido las llaves, habríamos entrado // Pluscuamperfecto de subjuntivo, nosotros — hubiéramos tenido
+
+Жаль, что вы не имели терпения
+Es una lástima que no hubierais tenido paciencia // Pluscuamperfecto de subjuntivo, vosotros — hubierais tenido
+
+Если бы они имели смелость, они бы сказали правду
+Si hubieran tenido valentía, habrían dicho la verdad // Pluscuamperfecto de subjuntivo, ellos/ustedes — hubieran tenido
+
+Если бы я имел план, я бы начал раньше
+Si hubiera tenido un plan, habría empezado antes // Pluscuamperfecto de subjuntivo, yo/él/ella/usted — hubiera tenido
+
+Как жаль, что у тебя не было больше времени
+Ojalá hubieras tenido más tiempo // Pluscuamperfecto de subjuntivo, tú — hubieras tenido
+
+Не верю, что она имела намерение обмануть
+No creo que hubiera tenido intención de engañar // Pluscuamperfecto de subjuntivo, yo/él/ella/usted — hubiera tenido
+
+Если бы мы имели доход, мы бы купили дом
+Si hubiéramos tenido ingresos, habríamos comprado una casa // Pluscuamperfecto de subjuntivo, nosotros — hubiéramos tenido
+
+Жаль, что вы имели такой страх
+Es una lástima que hubierais tenido tanto miedo // Pluscuamperfecto de subjuntivo, vosotros — hubierais tenido
+
+Если бы они имели аптечку, помогли бы быстрее
+Si hubieran tenido el botiquín, habrían ayudado antes // Pluscuamperfecto de subjuntivo, ellos/ustedes — hubieran tenido
+
+Береги себя!
+Ten cuidado // Imperativo afirmativo, tú — ten
+
+Имейте терпение, пожалуйста
+Tenga paciencia, por favor // Presente de subjuntivo / Imperativo, usted — tenga
+
+Давайте повезёт нам!
+Tengamos suerte // Presente de subjuntivo / Imperativo, nosotros — tengamos
+
+Держите ключи при себе
+Tened las llaves a mano // Imperativo afirmativo, vosotros — tened
+
+Желаю вам хорошего дня
+Tengan un buen día // Presente de subjuntivo / Imperativo, ellos/ustedes — tengan
+
+Не бойся!
+No tengas miedo // Imperativo negativo, tú — no tengas
+
+Не торопитесь
+No tenga prisa // Imperativo negativo, usted — no tenga
+
+Давайте не будем бояться
+No tengamos miedo // Imperativo negativo, nosotros — no tengamos
+
+Не вините себя
+No tengáis la culpa // Imperativo negativo, vosotros — no tengáis
+
+Не будьте голодны, ешьте
+No tengan hambre, coman // Imperativo negativo, ellos/ustedes — no tengan
+
+У меня есть охота съесть что-нибудь сладкое
+Tengo ganas de comer algo dulce // Presente, yo — tengo
+
+Тебе нужно взять аптечку
+Tienes que llevar el botiquín // Presente, tú — tienes que
+
+Ему нужно работать сегодня
+Tiene que trabajar hoy // Presente, él/ella/usted — tiene que
+
+Нам нужно иметь в виду это правило
+Tenemos que tener en cuenta esta regla // Presente, nosotros — tenemos que; infinitivo — tener
+
+Вам нужно быть осторожными на лестнице
+Tenéis que tener cuidado en la escalera // Presente, vosotros — tenéis que; infinitivo — tener
+
+Им нужно вернуть долг
+Tienen que devolver la deuda // Presente, ellos/ustedes — tienen que
+
+Я имел охоту спать после обеда
+Tuve ganas de dormir después de comer // Pretérito indefinido, yo — tuve
+
+Тебе нужно было прийти раньше
+Tuviste que venir antes // Pretérito indefinido, tú — tuviste que
+
+Ему пришлось сказать правду
+Tuvo que decir la verdad // Pretérito indefinido, él/ella/usted — tuvo que
+
+Нам нужно было ждать в пробке
+Tuvimos que esperar en el atasco // Pretérito indefinido, nosotros — tuvimos que
+
+Вам нужно было сделать задание
+Tuvisteis que hacer la tarea // Pretérito indefinido, vosotros — tuvisteis que
+
+Им нужно было уйти рано
+Tuvieron que irse temprano // Pretérito indefinido, ellos/ustedes — tuvieron que
+
+Раньше мне часто хотелось есть острое
+A menudo tenía ganas de comer algo picante // Imperfecto, yo/él/ella/usted — tenía
+
+Тебе нужно было работать каждый день
+Tenías que trabajar cada día // Imperfecto, tú — tenías que
+
+Ей нужно было иметь смелость
+Tenía que tener valentía // Imperfecto, yo/él/ella/usted — tenía que; infinitivo — tener
+
+Нам нужно было беречь деньги
+Teníamos que cuidar el dinero // Imperfecto, nosotros — teníamos que
+
+Вам нужно было приходить вовремя
+Teníais que llegar a tiempo // Imperfecto, vosotros — teníais que
+
+Им нужно было терпение в тот момент
+En aquel momento tenían que tener paciencia // Imperfecto, ellos/ustedes — tenían que; infinitivo — tener
+
+Я должен был работать весь день
+He tenido que trabajar todo el día // Pretérito perfecto, yo — he tenido que
+
+Тебе пришлось ждать
+Has tenido que esperar // Pretérito perfecto, tú — has tenido que
+
+Ему нужно было принять решение
+Ha tenido que tomar una decisión // Pretérito perfecto, él/ella/usted — ha tenido que
+
+Нам пришлось вернуться домой
+Hemos tenido que volver a casa // Pretérito perfecto, nosotros — hemos tenido que
+
+Вам нужно было иметь терпение
+Habéis tenido que tener paciencia // Pretérito perfecto, vosotros — habéis tenido que; infinitivo — tener
+
+Им пришлось начать сначала
+Han tenido que empezar de nuevo // Pretérito perfecto, ellos/ustedes — han tenido que
+
+Мне нужно будет работать завтра
+Mañana tendré que trabajar // Futuro, yo — tendré que
+
+Тебе нужно будет взять корзину
+Tendrás que llevar la cesta // Futuro, tú — tendrás que
+
+Ей нужно будет иметь терпение
+Tendrá que tener paciencia // Futuro, él/ella/usted — tendrá que; infinitivo — tener
+
+Нам нужно будет иметь план
+Tendremos que tener un plan // Futuro, nosotros — tendremos que; infinitivo — tener
+
+Вам нужно будет вернуть ключи
+Tendréis que devolver las llaves // Futuro, vosotros — tendréis que
+
+Им нужно будет погасить долг
+Tendrán que pagar la deuda // Futuro, ellos/ustedes — tendrán que
+
+Я бы должен был работать больше
+Tendría que trabajar más // Condicional, yo/él/ella/usted — tendría que
+
+Тебе нужно было бы иметь смелость
+Tendrías que tener valentía // Condicional, tú — tendrías que; infinitivo — tener
+
+Ему нужно было бы сказать правду
+Tendría que decir la verdad // Condicional, yo/él/ella/usted — tendría que
+
+Нам нужно было бы иметь больше времени
+Tendríamos que tener más tiempo // Condicional, nosotros — tendríamos que; infinitivo — tener
+
+Вам нужно было бы прийти раньше
+Tendríais que venir antes // Condicional, vosotros — tendríais que
+
+Им нужно было бы начать сначала
+Tendrían que empezar de nuevo // Condicional, ellos/ustedes — tendrían que
+
+У меня есть охота попробовать что-то вкусное
+Tengo ganas de probar algo rico // Presente, yo — tengo
+
+У тебя сонливость?
+¿Tienes sueño? // Presente, tú — tienes
+
+У него стыд за свою ложь
+Tiene vergüenza de su mentira // Presente, él/ella/usted — tiene
+
+У нас есть уверенность в успехе
+Tenemos certeza del éxito // Presente, nosotros — tenemos
+
+У вас есть повод для гнева?
+¿Tenéis motivo para la rabia? // Presente, vosotros — tenéis
+
+У них есть способность учиться
+Tienen capacidad para aprender // Presente, ellos/ustedes — tienen
+
+У меня была рана на руке
+Tuve una herida en la mano // Pretérito indefinido, yo — tuve
+
+У тебя был бардак в комнате
+Tuviste un lío en la habitación // Pretérito indefinido, tú — tuviste
+
+У неё была красота и обаяние
+Ella tuvo belleza y encanto // Pretérito indefinido, él/ella/usted — tuvo
+
+У нас был хороший доход
+Tuvimos un buen ingreso // Pretérito indefinido, nosotros — tuvimos
+
+У вас был соперник в игре
+Tuvisteis un rival en el juego // Pretérito indefinido, vosotros — tuvisteis
+
+У них был разрыв в отношениях
+Tuvieron una ruptura en la relación // Pretérito indefinido, ellos/ustedes — tuvieron
+
+Раньше у меня был страх перед глубиной
+Antes tenía miedo de la profundidad // Imperfecto, yo/él/ella/usted — tenía
+
+Раньше у тебя был гнев на него
+Antes tenías rabia hacia él // Imperfecto, tú — tenías
+
+У неё всегда была причина объяснить
+Ella siempre tenía una razón para explicar // Imperfecto, yo/él/ella/usted — tenía
+
+У нас был недостаток времени
+Teníamos falta de tiempo // Imperfecto, nosotros — teníamos
+
+У вас была привычка вставать рано
+Teníais la costumbre de levantaros temprano // Imperfecto, vosotros — teníais
+
+У них был враг в бизнесе
+Tenían un rival en el negocio // Imperfecto, ellos/ustedes — tenían
