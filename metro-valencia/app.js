@@ -53,7 +53,7 @@ const STATIONS = CATALOG.map(([code, name]) => {
   return { id, tab: name, code, page: `https://horariosvlc.es/metro/estacion/${id}` };
 });
 
-const DEFAULT_SLOTS = ["amistat"];
+const DEFAULT_SLOTS = ["angel-guimera"];
 
 const LINE_COLORS = {
   1: ["#E6B325", "#1b1714"],
@@ -228,7 +228,7 @@ const planoHits = document.querySelector("#plano-hits");
 const slotEls = [...document.querySelectorAll(".slot")];
 const recentEl = document.querySelector("#recent");
 const cache = new Map();
-let activeId = "amistat";
+let activeId = DEFAULT_SLOTS[0];
 let view = null;
 const loadedDock = readSlots();
 let slots = loadedDock.slots;
@@ -241,7 +241,7 @@ function stationById(id) {
 function stationFromHash() {
   const id = location.hash.replace("#", "");
   if (stationById(id)) return id;
-  return slots.find(Boolean) || "amistat";
+  return slots.find(Boolean) || DEFAULT_SLOTS[0];
 }
 
 function keptId(id) {
@@ -255,7 +255,7 @@ function readSlots() {
       const ids = saved.map(keptId);
       const kept = saved.length >= 4 ? ids[2] : ids[0];
       const displaced = saved.length >= 4 ? [ids[3], ids[0], ids[1]] : ids.slice(1);
-      return { slots: [kept || "amistat"], seed: displaced };
+      return { slots: [kept || DEFAULT_SLOTS[0]], seed: displaced };
     }
   } catch { /* keep the home station */ }
   return { slots: [...DEFAULT_SLOTS], seed: [] };
