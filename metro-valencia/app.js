@@ -338,6 +338,7 @@ function recentButton(id) {
   button.className = "recent-stop";
   button.textContent = station.tab;
   button.title = station.tab;
+  button.disabled = !navigator.onLine;
   button.addEventListener("click", () => recall(station));
   return button;
 }
@@ -725,6 +726,7 @@ function closeFinders() {
 }
 
 function openFinder(slot) {
+  if (!navigator.onLine) return;
   slotEls.forEach((other) => { if (other !== slot) closeFinder(other, false); });
   slot.classList.add("is-search");
   const find = slot.querySelector(".find");
@@ -809,11 +811,23 @@ function parseDepartures(html) {
 function formatWait(minutes) {
   const value = Math.max(0, Math.round(minutes));
   if (value === 0) return "ahora";
+  return formatSpan(value);
+}
+
+function formatSpan(value) {
   const hours = Math.floor(value / 60);
   const rest = value % 60;
   if (hours === 0) return `${rest} min`;
   if (rest === 0) return `${hours} h`;
   return `${hours} h ${rest} min`;
+}
+
+function formatPast(minutes) {
+  return `-${formatSpan(Math.max(1, Math.round(Math.abs(minutes))))}`;
+}
+
+function isPast(departure) {
+  return !navigator.onLine && minutesUntil(departure) < 0;
 }
 
 function minutesUntil(departure) {
@@ -834,15 +848,17 @@ function chip(code, color, text) {
 }
 
 function waitLabel(departure) {
+  const minutes = minutesUntil(departure);
+  if (!navigator.onLine && minutes < 0) return formatPast(minutes);
   const delay = typeof departure.delay === "number" && departure.delay !== 0
     ? ` ${departure.delay > 0 ? "+" : ""}${departure.delay}`
     : "";
-  return formatWait(minutesUntil(departure)) + delay;
+  return formatWait(minutes) + delay;
 }
 
 function departureRows(departures) {
   if (!departures.length) return '<p class="empty">No hay salidas.</p>';
-  return departures.map((departure) => `<article class="row">
+  return departures.map((departure) => `<article class="row${isPast(departure) ? " is-past" : ""}">
       <span class="time">${escapeHtml(departure.time || "")}${departure.tomorrow ? '<small class="day">mañana</small>' : ""}</span>
       ${chip(departure.line?.chip || "", departure.line?.color || "#333", departure.line?.text)}
       <span class="dest">${escapeHtml(departure.headsign || "")}</span>
@@ -852,18 +868,26 @@ function departureRows(departures) {
 
 function paintWaits() {
   if (!view) return;
-  const waits = document.querySelectorAll("#rows .wait");
+  const rows = document.querySelectorAll("#rows .row");
   view.departures.forEach((departure, index) => {
-    if (waits[index]) waits[index].textContent = waitLabel(departure);
+    const row = rows[index];
+    if (!row) return;
+    row.classList.toggle("is-past", isPast(departure));
+    const wait = row.querySelector(".wait");
+    if (wait) wait.textContent = waitLabel(departure);
   });
+}
+
+function freshnessLabel(data) {
+  const updated = data.updated ? ` ${data.updated}` : "";
+  if (!navigator.onLine) return `sin conexión${updated}`;
+  return `${data.realtime ? "en directo" : "horario"}${updated}`;
 }
 
 function render(data) {
   app.hidden = false;
   status.hidden = true;
-  const fresh = data.realtime ? "en directo" : "horario";
-  const updated = data.updated ? ` ${data.updated}` : "";
-  document.querySelector("#fresh").textContent = `${fresh}${updated}`;
+  document.querySelector("#fresh").textContent = freshnessLabel(data);
   app.innerHTML = `
     <section class="board" aria-label="Próximas salidas">
       <div id="rows">${departureRows(data.departures)}</div>
@@ -871,18 +895,51 @@ function render(data) {
   `;
 }
 
+const BOARDS_KEY = "metro-valencia-boards";
+
+function saveBoards() {
+  const boards = {};
+  for (const [id, data] of cache) boards[id] = data;
+  try { localStorage.setItem(BOARDS_KEY, JSON.stringify(boards)); } catch { /* private mode */ }
+}
+
+function restoreBoards() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(BOARDS_KEY));
+    if (!saved || typeof saved !== "object") return;
+    for (const [id, data] of Object.entries(saved)) {
+      if (!stationById(id) || !data || !Array.isArray(data.departures)) continue;
+      cache.set(id, data);
+    }
+  } catch { /* keep an empty cache */ }
+}
+
+function showOfflineEmpty() {
+  view = null;
+  app.hidden = false;
+  status.hidden = true;
+  document.querySelector("#fresh").textContent = "sin conexión";
+  app.innerHTML = `<div class="error"><strong>Sin conexión.</strong><p>Abre la página con red una vez para ver el horario sin conexión.</p></div>`;
+}
+
 async function load(id) {
   const station = stationById(id);
+  if (!station) return;
   const cached = cache.get(id);
   if (cached) {
     view = cached;
     render(cached);
+  } else if (!navigator.onLine) {
+    showOfflineEmpty();
+    return;
   } else {
     status.hidden = false;
     status.textContent = "Cargando…";
     app.hidden = true;
     app.innerHTML = "";
   }
+
+  if (!navigator.onLine) return;
 
   const response = await fetch(endpoint(station));
   if (!response.ok) throw new Error("No se pudo cargar el horario");
@@ -902,13 +959,18 @@ async function load(id) {
     fetchedAt: Date.now(),
   };
   cache.set(station.id, view);
+  saveBoards();
   render(view);
 }
 
 function showError(error) {
   const fresh = document.querySelector("#fresh");
   if (view && view.id === activeId && fresh && document.querySelector("#rows")) {
-    fresh.textContent = "sin actualizar";
+    fresh.textContent = navigator.onLine ? "sin actualizar" : freshnessLabel(view);
+    return;
+  }
+  if (!navigator.onLine) {
+    showOfflineEmpty();
     return;
   }
   app.hidden = false;
@@ -956,7 +1018,22 @@ function onQueryKey(event, slot, index) {
   }
 }
 
+function setOffline(offline) {
+  document.body.classList.toggle("is-offline", offline);
+  for (const button of document.querySelectorAll(".find, .tab, .recent-stop, .spot")) {
+    button.disabled = offline;
+  }
+  if (offline) {
+    for (const button of document.querySelectorAll(".zoom-btn")) button.disabled = true;
+    closeFinders();
+  } else {
+    paintZoom();
+  }
+  if (view && view.id === activeId && document.querySelector("#rows")) render(view);
+}
+
 const hashId = location.hash.replace("#", "");
+restoreBoards();
 if (stationById(hashId)) ensureSlot(hashId);
 slotEls.forEach((_, index) => paintSlot(index));
 paintRecent();
@@ -1009,7 +1086,18 @@ window.addEventListener("hashchange", () => {
 });
 
 selectTab(stationFromHash(), false);
+setOffline(!navigator.onLine);
+window.addEventListener("offline", () => setOffline(true));
+window.addEventListener("online", () => {
+  setOffline(false);
+  load(activeId).catch(showError);
+});
 setInterval(paintWaits, 1000);
 setInterval(() => {
+  if (!navigator.onLine) return;
   load(activeId).catch(showError);
 }, REFRESH_MS);
+
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("./sw.js").catch(() => {});
+}
