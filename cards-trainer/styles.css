@@ -59,7 +59,7 @@ select:focus {
     flex-flow: column;
     align-items: stretch;
     margin: 10% 24px 0 24px;
-    font-size: 3em;
+    font-size: 4vh;
     flex: 1;
     min-height: 0;
     overflow: auto;
@@ -73,7 +73,7 @@ select:focus {
 
 #stats {
     display: flex;
-    justify-content: center;
+    justify-content: start;
     gap: 16px;
     padding: 10px 16px 8px;
     color: #444;
