@@ -347,17 +347,32 @@ main {
   align-items: center;
   width: 100%;
   min-width: 0;
-  min-height: 2.55rem;
+  min-height: 3.5rem;
   border-top: 1px solid var(--line);
   white-space: nowrap;
 }
 
 .row:first-child { border-top: 0; }
 
+.row.is-past .time,
+.row.is-past .dest,
+.row.is-past .wait {
+  color: var(--red);
+}
+
+body.is-offline .find,
+body.is-offline .tab,
+body.is-offline .recent-stop,
+body.is-offline .zoom-btn {
+  opacity: 0.4;
+  cursor: default;
+  pointer-events: none;
+}
+
 .time {
   font-variant-numeric: tabular-nums;
   font-weight: 650;
-  font-size: 1.05rem;
+  font-size: 1.5rem;
 }
 
 .day {
@@ -373,13 +388,13 @@ main {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 2.15rem;
-  height: 1.45rem;
-  padding: 0 6px;
+  min-width: 2.35rem;
+  height: 1.65rem;
+  padding: 0 7px;
   border-radius: 999px;
   color: #fff;
   background: var(--c, #333);
-  font-size: 0.78rem;
+  font-size: 0.9rem;
   font-weight: 700;
 }
 
@@ -387,13 +402,19 @@ main {
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
+  font-size: 1.4rem;
   font-weight: 600;
 }
 
 .wait {
   font-variant-numeric: tabular-nums;
   font-weight: 650;
-  font-size: 0.95rem;
+  font-size: 1.4rem;
+}
+
+body.is-offline #fresh {
+  color: var(--red);
+  font-weight: 650;
 }
 
 .meta {
