@@ -505,6 +505,19 @@ body.is-offline #fresh {
   font-weight: 650;
 }
 
+.walk-key-note {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.85rem;
+  font-weight: 550;
+  line-height: 1.4;
+}
+
+.walk-key-note a {
+  color: var(--ink);
+  font-weight: 650;
+}
+
 .walk-key-label {
   color: var(--muted);
   font-size: 0.85rem;
@@ -557,6 +570,19 @@ body.is-offline #fresh {
 }
 
 #walk[hidden] { display: none; }
+
+.walk-setup {
+  align-self: flex-start;
+  max-width: min(20rem, 70%);
+  margin: auto 2px 0;
+  color: var(--ink);
+  font-size: 0.95rem;
+  font-weight: 650;
+  text-align: left;
+}
+
+.walk-setup[hidden],
+body.is-finding .walk-setup { display: none; }
 
 .meta {
   display: flex;

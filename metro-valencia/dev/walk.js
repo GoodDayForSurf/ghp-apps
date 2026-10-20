@@ -32,7 +32,34 @@
     input.select();
   }
 
+  function clearSetup() {
+    const spot = document.querySelector("#walk-setup");
+    if (!spot) return;
+    spot.replaceChildren();
+    spot.hidden = true;
+  }
+
+  function paintSetup(text) {
+    const el = document.querySelector("#walk");
+    const spot = document.querySelector("#walk-setup");
+    el.replaceChildren();
+    el.hidden = true;
+    spot.replaceChildren();
+    spot.hidden = false;
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "walk-ask";
+    button.textContent = text;
+    button.addEventListener("click", openKeyDialog);
+    spot.append(button);
+  }
+
   function paintWalk(text, action) {
+    if (action === "setup") {
+      paintSetup(text);
+      return;
+    }
+    clearSetup();
     const el = document.querySelector("#walk");
     el.replaceChildren();
     if (!text) {
@@ -48,10 +75,7 @@
     button.type = "button";
     button.className = "walk-ask";
     button.textContent = text;
-    button.addEventListener("click", () => {
-      if (action === "setup") openKeyDialog();
-      else walkTo(askedPlace);
-    });
+    button.addEventListener("click", () => walkTo(askedPlace));
     el.append(button);
   }
 
