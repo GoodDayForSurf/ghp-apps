@@ -1,5 +1,8 @@
-body {
+html, body {
     margin: 0;
+    height: 100%;
+    overflow: hidden;
+    overscroll-behavior: none;
 }
 
 @font-face {
@@ -35,8 +38,16 @@ select:focus {
     display: flex;
     justify-content: start;
     flex-flow: column;
+    position: fixed;
+    top: var(--app-offset, 0px);
+    left: 0;
+    right: 0;
+    width: 100%;
     height: 100vh;
-    width: 100vw;
+    height: 100svh;
+    height: var(--app-height, 100svh);
+    max-height: var(--app-height, 100svh);
+    overflow: hidden;
 }
 
 #buttons-container {
@@ -55,6 +66,7 @@ select:focus {
 }
 
 #dictionary-bar {
+    flex-shrink: 0;
     margin-top: auto;
     padding-bottom: env(safe-area-inset-bottom);
 }

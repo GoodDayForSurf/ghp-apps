@@ -58,6 +58,23 @@ const stages = {
     8: 3600 * 24 * 3
 };
 
+function fitAppToVisibleViewport() {
+    const viewport = window.visualViewport;
+    const height = viewport ? viewport.height : window.innerHeight;
+    const offset = viewport ? viewport.offsetTop : 0;
+    const rootStyle = document.documentElement.style;
+    rootStyle.setProperty('--app-height', `${Math.round(height)}px`);
+    rootStyle.setProperty('--app-offset', `${Math.round(offset)}px`);
+}
+
+fitAppToVisibleViewport();
+window.addEventListener('resize', fitAppToVisibleViewport);
+window.addEventListener('orientationchange', fitAppToVisibleViewport);
+if (window.visualViewport) {
+    window.visualViewport.addEventListener('resize', fitAppToVisibleViewport);
+    window.visualViewport.addEventListener('scroll', fitAppToVisibleViewport);
+}
+
 async function load() {
    window.addEventListener('beforeunload', () => {
       try { saveState(); } catch(e) {}
