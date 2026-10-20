@@ -56,16 +56,16 @@ const STATIONS = CATALOG.map(([code, name]) => {
 const DEFAULT_SLOTS = ["angel-guimera"];
 
 const LINE_COLORS = {
-  1: ["#E6B325", "#1b1714"],
-  2: ["#D4145A", "#fff"],
-  3: ["#DD052C", "#fff"],
-  4: ["#6FBE44", "#1b1714"],
-  5: ["#3A30C0", "#fff"],
-  6: ["#7B3F8D", "#fff"],
-  7: ["#18AAD8", "#fff"],
-  8: ["#7A7A7A", "#fff"],
-  9: ["#F18F01", "#1b1714"],
-  10: ["#00A3A1", "#fff"],
+  1: ["#E4BE36", "#fff"],
+  2: ["#B4397F", "#fff"],
+  3: ["#B11D2F", "#fff"],
+  4: ["#2B498B", "#fff"],
+  5: ["#4E886D", "#fff"],
+  6: ["#817FB3", "#fff"],
+  7: ["#CE7D28", "#fff"],
+  8: ["#96C4DA", "#fff"],
+  9: ["#A47E52", "#fff"],
+  10: ["#B6DD79", "#fff"],
 };
 
 const GEO_TEXT = `
