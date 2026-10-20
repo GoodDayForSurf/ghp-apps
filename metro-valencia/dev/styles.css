@@ -105,7 +105,7 @@ body.is-finding .recent { display: none; }
 
 .recent-stop {
   appearance: none;
-  max-width: 9rem;
+  max-width: 13rem;
   min-height: 40px;
   padding: 6px 10px;
   border: 1px solid var(--line);
@@ -113,7 +113,7 @@ body.is-finding .recent { display: none; }
   background: rgba(255, 253, 248, 0.94);
   color: var(--ink);
   box-shadow: 0 3px 10px rgba(27, 23, 20, 0.12);
-  font: 600 1.1rem/1.15 system-ui, sans-serif;
+  font: 600 1.15rem/1.15 system-ui, sans-serif;
   text-align: right;
   white-space: nowrap;
   overflow: hidden;
@@ -354,6 +354,21 @@ main {
 
 .row:first-child { border-top: 0; }
 
+.row.is-past .time,
+.row.is-past .dest,
+.row.is-past .wait {
+  color: var(--red);
+}
+
+body.is-offline .find,
+body.is-offline .tab,
+body.is-offline .recent-stop,
+body.is-offline .zoom-btn {
+  opacity: 0.4;
+  cursor: default;
+  pointer-events: none;
+}
+
 .time {
   font-variant-numeric: tabular-nums;
   font-weight: 650;
@@ -394,6 +409,11 @@ main {
   font-variant-numeric: tabular-nums;
   font-weight: 650;
   font-size: 0.95rem;
+}
+
+body.is-offline #fresh {
+  color: var(--red);
+  font-weight: 650;
 }
 
 .meta {
