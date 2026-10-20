@@ -21,6 +21,7 @@
     <p class="status" id="status">Cargando…</p>
     <div id="app" hidden></div>
     <p class="meta">
+      <span id="walk" hidden></span>
       <span id="fresh"></span>
     </p>
     <div class="tabs">
@@ -42,6 +43,19 @@
     </div>
   </main>
 
+  <dialog id="walk-key" class="walk-key" aria-labelledby="walk-key-title">
+    <form id="walk-key-form" class="walk-key-form">
+      <p id="walk-key-title" class="walk-key-title">Tiempo a pie</p>
+      <label class="walk-key-label" for="walk-key-input">Clave del servicio</label>
+      <input id="walk-key-input" class="walk-key-input" type="text" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="done">
+      <div class="walk-key-actions">
+        <button type="button" class="walk-key-cancel" id="walk-key-cancel">Cancelar</button>
+        <button type="submit" class="walk-key-save">Guardar</button>
+      </div>
+    </form>
+  </dialog>
+
+  <script src="walk.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

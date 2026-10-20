@@ -819,7 +819,7 @@ function formatSpan(value) {
   const rest = value % 60;
   if (hours === 0) return `${rest} min`;
   if (rest === 0) return `${hours} h`;
-  return `${hours} h ${rest} min`;
+  return `${hours} h ${rest}`;
 }
 
 function formatPast(minutes) {
@@ -844,7 +844,48 @@ function escapeHtml(value) {
 }
 
 function chip(code, color, text) {
-  return `<span class="chip" style="--c:${escapeHtml(color)};color:${escapeHtml(text || "#fff")}">${escapeHtml(code)}</span>`;
+  return `<span class="line"><span class="chip" style="--c:${escapeHtml(color)};color:${escapeHtml(text || "#fff")}">${escapeHtml(code)}</span></span>`;
+}
+
+const LEAVE_ICONS = {
+  late: `<span class="leave-slot"><img class="leave-icon" src="no-time.webp" alt=""></span>`,
+  runner: `<span class="leave-slot"><img class="leave-icon" src="runer.svg" alt=""></span>`,
+  coffee: `<span class="leave-slot"><img class="leave-icon" src="coffee.svg" alt=""></span>`,
+};
+
+function leaveInfo(departure) {
+  if (typeof window.walkSeconds !== "number") return null;
+  const walk = Math.max(1, Math.round(window.walkSeconds / 60));
+  const minutes = Math.round(minutesUntil(departure) - walk);
+  const icon = minutes < 0 ? "late" : minutes < 3 ? "runner" : "coffee";
+  return { minutes, icon };
+}
+
+function leaveLabel(minutes) {
+  if (minutes < 0) return formatPast(minutes);
+  return formatWait(minutes);
+}
+
+function paintLeave(cell, departure) {
+  const info = leaveInfo(departure);
+  if (!info) {
+    cell.classList.remove("is-rush");
+    cell.removeAttribute("title");
+    delete cell.dataset.icon;
+    cell.replaceChildren();
+    return;
+  }
+  cell.classList.toggle("is-rush", info.icon !== "coffee");
+  cell.title = "Tiempo para salir";
+  const showTime = info.icon === "coffee";
+  if (cell.dataset.icon !== info.icon) {
+    cell.dataset.icon = info.icon;
+    cell.innerHTML = showTime
+      ? `${LEAVE_ICONS.coffee}<span class="leave-time"></span>`
+      : LEAVE_ICONS[info.icon];
+  }
+  const time = cell.querySelector(".leave-time");
+  if (time) time.textContent = leaveLabel(info.minutes);
 }
 
 function waitLabel(departure) {
@@ -863,6 +904,7 @@ function departureRows(departures) {
       ${chip(departure.line?.chip || "", departure.line?.color || "#333", departure.line?.text)}
       <span class="dest">${escapeHtml(departure.headsign || "")}</span>
       <span class="wait">${escapeHtml(waitLabel(departure))}</span>
+      <span class="leave"></span>
     </article>`).join("");
 }
 
@@ -875,6 +917,8 @@ function paintWaits() {
     row.classList.toggle("is-past", isPast(departure));
     const wait = row.querySelector(".wait");
     if (wait) wait.textContent = waitLabel(departure);
+    const leave = row.querySelector(".leave");
+    if (leave) paintLeave(leave, departure);
   });
 }
 
@@ -893,6 +937,7 @@ function render(data) {
       <div id="rows">${departureRows(data.departures)}</div>
     </section>
   `;
+  paintWaits();
 }
 
 const BOARDS_KEY = "metro-valencia-boards";
@@ -978,6 +1023,11 @@ function showError(error) {
   app.innerHTML = `<div class="error"><strong>No se pudieron cargar las salidas.</strong><p>${escapeHtml(error.message)}</p></div>`;
 }
 
+function showWalk(station) {
+  const point = station && GEO.get(station.code);
+  walkTo(point ? { id: station.id, lon: point.lon, lat: point.lat } : null);
+}
+
 function selectTab(id, updateHash) {
   const station = stationById(id) || stationById(slots.find(Boolean));
   if (!station) return;
@@ -990,6 +1040,7 @@ function selectTab(id, updateHash) {
   });
   if (updateHash) history.replaceState(null, "", `#${station.id}`);
   load(station.id).catch(showError);
+  showWalk(station);
 }
 
 function onQueryKey(event, slot, index) {
@@ -1091,8 +1142,11 @@ window.addEventListener("offline", () => setOffline(true));
 window.addEventListener("online", () => {
   setOffline(false);
   load(activeId).catch(showError);
+  const station = stationById(activeId);
+  if (station) showWalk(station);
 });
 setInterval(paintWaits, 1000);
+window.addEventListener("walk-time", paintWaits);
 setInterval(() => {
   if (!navigator.onLine) return;
   load(activeId).catch(showError);
