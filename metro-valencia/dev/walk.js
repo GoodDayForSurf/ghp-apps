@@ -1,6 +1,6 @@
 (() => {
   const KEY_STORE = "metro-valencia-ors";
-  const SETUP_LABEL = "Configurar el tiempo a pie hasta la estación";
+  const SETUP_LABEL = "Tiempo a pie hasta la estación";
   const walkCache = new Map();
   let here = null;
   let walkToken = 0;
@@ -32,34 +32,20 @@
     input.select();
   }
 
-  function clearSetup() {
+  function paintSetup() {
     const spot = document.querySelector("#walk-setup");
     if (!spot) return;
-    spot.replaceChildren();
-    spot.hidden = true;
-  }
-
-  function paintSetup(text) {
-    const el = document.querySelector("#walk");
-    const spot = document.querySelector("#walk-setup");
-    el.replaceChildren();
-    el.hidden = true;
-    spot.replaceChildren();
-    spot.hidden = false;
     const button = document.createElement("button");
     button.type = "button";
-    button.className = "walk-ask";
-    button.textContent = text;
+    const on = Boolean(readKey());
+    button.className = on ? "walk-ask is-on" : "walk-ask";
+    button.textContent = `${SETUP_LABEL}: ${on ? "activado" : "desactivado"}`;
     button.addEventListener("click", openKeyDialog);
-    spot.append(button);
+    spot.replaceChildren(button);
+    spot.hidden = false;
   }
 
   function paintWalk(text, action) {
-    if (action === "setup") {
-      paintSetup(text);
-      return;
-    }
-    clearSetup();
     const el = document.querySelector("#walk");
     el.replaceChildren();
     if (!text) {
@@ -139,7 +125,7 @@
     const key = readKey();
     publishWalk(null);
     if (!key) {
-      paintWalk(SETUP_LABEL, "setup");
+      paintWalk("");
       return;
     }
     if (!place || !navigator.onLine) {
@@ -184,7 +170,7 @@
       const message = error.message === "Clave no válida" || error.message === "Sin ruta a pie" || error.message === "Activa la ubicación" || error.message === "Sin ubicación"
         ? error.message
         : "Sin ruta a pie";
-      const action = message === "Clave no válida" ? "setup" : message === "Activa la ubicación" ? "retry" : null;
+      const action = message === "Activa la ubicación" ? "retry" : null;
       paintWalk(message, action);
     }
   }
@@ -200,8 +186,11 @@
     event.preventDefault();
     writeKey(input?.value || "");
     dialog?.close();
+    paintSetup();
     walkTo(askedPlace);
   });
+
+  paintSetup();
 
   window.walkTo = walkTo;
 })();
