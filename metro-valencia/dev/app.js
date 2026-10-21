@@ -897,8 +897,79 @@ function waitLabel(departure) {
   return formatWait(minutes) + delay;
 }
 
-function departureRows(departures) {
-  if (!departures.length) return '<p class="empty">No hay salidas.</p>';
+const DEST_KEY = "metro-valencia-destinos";
+
+function readDestFilters() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(DEST_KEY));
+    return saved && typeof saved === "object" ? saved : {};
+  } catch {
+    return {};
+  }
+}
+
+function writeDestFilters(filters) {
+  try { localStorage.setItem(DEST_KEY, JSON.stringify(filters)); } catch { /* private mode */ }
+}
+
+function selectedDestinations(stationId) {
+  const list = readDestFilters()[stationId];
+  return Array.isArray(list) ? list.filter((name) => typeof name === "string" && name) : [];
+}
+
+function destinationGroups(departures) {
+  const groups = [];
+  const byName = new Map();
+  for (const departure of departures) {
+    const name = (departure.headsign || "").trim();
+    if (!name) continue;
+    let group = byName.get(name);
+    if (!group) {
+      group = { name, lines: [] };
+      byName.set(name, group);
+      groups.push(group);
+    }
+    const code = departure.line?.chip;
+    if (code && !group.lines.some((line) => line.chip === code)) group.lines.push(departure.line);
+  }
+  return groups;
+}
+
+function visibleDepartures(data) {
+  const picked = selectedDestinations(data.id);
+  if (!picked.length) return data.departures;
+  const allow = new Set(picked);
+  return data.departures.filter((departure) => allow.has((departure.headsign || "").trim()));
+}
+
+function toggleDestination(name) {
+  if (!view || !name) return;
+  const picked = new Set(selectedDestinations(view.id));
+  if (picked.has(name)) picked.delete(name);
+  else picked.add(name);
+  const filters = readDestFilters();
+  if (picked.size) filters[view.id] = [...picked];
+  else delete filters[view.id];
+  writeDestFilters(filters);
+  render(view);
+}
+
+function destinationFilter(data) {
+  const groups = destinationGroups(data.departures);
+  if (!groups.length) return "";
+  const picked = new Set(selectedDestinations(data.id));
+  const chips = groups.map(({ name, lines }) => {
+    const on = picked.has(name);
+    const marks = lines.map((line) => chip(line.chip || "", line.color || "#333", line.text)).join("");
+    return `<button type="button" class="dest-chip${on ? " is-on" : ""}" data-dest="${escapeHtml(name)}" aria-pressed="${on ? "true" : "false"}">${marks}<span class="dest-chip-name">${escapeHtml(name)}</span></button>`;
+  }).join("");
+  return `<div class="dest-filter" role="group" aria-label="Destinos"><p class="dest-filter-label">Destinos</p><div class="dest-filter-list">${chips}</div></div>`;
+}
+
+function departureRows(departures, filtered) {
+  if (!departures.length) {
+    return `<p class="empty">${filtered ? "No hay salidas a esos destinos." : "No hay salidas."}</p>`;
+  }
   return departures.map((departure) => `<article class="row${isPast(departure) ? " is-past" : ""}">
       <span class="time">${escapeHtml(departure.time || "")}${departure.tomorrow ? '<small class="day">mañana</small>' : ""}</span>
       ${chip(departure.line?.chip || "", departure.line?.color || "#333", departure.line?.text)}
@@ -911,7 +982,7 @@ function departureRows(departures) {
 function paintWaits() {
   if (!view) return;
   const rows = document.querySelectorAll("#rows .row");
-  view.departures.forEach((departure, index) => {
+  visibleDepartures(view).forEach((departure, index) => {
     const row = rows[index];
     if (!row) return;
     row.classList.toggle("is-past", isPast(departure));
@@ -932,9 +1003,12 @@ function render(data) {
   app.hidden = false;
   status.hidden = true;
   document.querySelector("#fresh").textContent = freshnessLabel(data);
+  const picked = selectedDestinations(data.id);
+  const departures = visibleDepartures(data);
   app.innerHTML = `
     <section class="board" aria-label="Próximas salidas">
-      <div id="rows">${departureRows(data.departures)}</div>
+      <div id="rows">${departureRows(departures, picked.length > 0)}</div>
+      ${destinationFilter(data)}
     </section>
   `;
   paintWaits();
@@ -1134,6 +1208,12 @@ window.addEventListener("hashchange", () => {
   ensureSlot(id);
   closeFinders();
   selectTab(id, false);
+});
+
+app.addEventListener("click", (event) => {
+  const chip = event.target.closest(".dest-chip");
+  if (!chip) return;
+  toggleDestination(chip.dataset.dest);
 });
 
 selectTab(stationFromHash(), false);
