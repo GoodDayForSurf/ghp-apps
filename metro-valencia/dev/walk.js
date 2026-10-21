@@ -1,6 +1,6 @@
 (() => {
   const KEY_STORE = "metro-valencia-ors";
-  const SETUP_LABEL = "Tiempo a pie hasta la estación";
+  const SETUP_LABEL = "Tiempo a pie";
   const walkCache = new Map();
   let here = null;
   let walkToken = 0;

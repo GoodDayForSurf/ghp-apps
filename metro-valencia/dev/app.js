@@ -963,7 +963,7 @@ function destinationFilter(data) {
     const marks = lines.map((line) => chip(line.chip || "", line.color || "#333", line.text)).join("");
     return `<button type="button" class="dest-chip${on ? " is-on" : ""}" data-dest="${escapeHtml(name)}" aria-pressed="${on ? "true" : "false"}">${marks}<span class="dest-chip-name">${escapeHtml(name)}</span></button>`;
   }).join("");
-  return `<div class="dest-filter" role="group" aria-label="Destinos"><p class="dest-filter-label">Destinos</p><div class="dest-filter-list">${chips}</div></div>`;
+  return `<div class="dest-filter" role="group" aria-label="Destinos"><div class="dest-filter-list">${chips}</div></div>`;
 }
 
 function departureRows(departures, filtered) {
