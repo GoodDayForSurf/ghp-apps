@@ -328,8 +328,10 @@ main {
 
 .board {
   flex: 0 0 auto;
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-rows: minmax(calc(50dvh - 8px - env(safe-area-inset-top)), auto) auto;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: start;
   min-width: 0;
   width: 100%;
 }
@@ -340,6 +342,7 @@ main {
   column-gap: 8px;
   align-items: center;
   min-width: 0;
+  border-bottom: 1px solid silver;
 }
 
 .row { display: contents; }
@@ -372,7 +375,7 @@ body.is-offline .zoom-btn {
 .time {
   font-variant-numeric: tabular-nums;
   font-weight: 650;
-  font-size: 1.35rem;
+  font-size: 1.25rem;
 }
 
 .day {
@@ -405,7 +408,7 @@ body.is-offline .zoom-btn {
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
-  font-size: 1.25rem;
+  font-size: 1.15rem;
   font-weight: 600;
 }
 
@@ -413,7 +416,7 @@ body.is-offline .zoom-btn {
   justify-content: flex-end;
   font-variant-numeric: tabular-nums;
   font-weight: 650;
-  font-size: 1.25rem;
+  font-size: 1.15rem;
 }
 
 .leave {
@@ -423,7 +426,7 @@ body.is-offline .zoom-btn {
   color: var(--ink);
   font-variant-numeric: tabular-nums;
   font-weight: 650;
-  font-size: 1.05rem;
+  font-size: 0.95rem;
 }
 
 .leave-time {
