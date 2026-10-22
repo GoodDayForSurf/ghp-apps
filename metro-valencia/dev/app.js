@@ -980,6 +980,37 @@ function beep() {
   }
 }
 
+const RING_EVERY_MS = 2000;
+let ringTimer = null;
+
+function ring() {
+  beep();
+  navigator.vibrate?.([300, 150, 300]);
+}
+
+function startRinging(target) {
+  stopRinging();
+  ring();
+  ringTimer = setInterval(ring, RING_EVERY_MS);
+  const button = document.createElement("button");
+  button.type = "button";
+  button.className = "ring-stop";
+  button.textContent = `Hora de salir · ${target.chip} ${target.headsign} ${target.time} — Parar`;
+  document.body.append(button);
+}
+
+async function stopRinging() {
+  if (!ringTimer) return;
+  clearInterval(ringTimer);
+  ringTimer = null;
+  navigator.vibrate?.(0);
+  document.querySelector(".ring-stop")?.remove();
+  try {
+    const registration = await navigator.serviceWorker?.ready;
+    for (const note of await registration?.getNotifications({ tag: "metro-aviso" }) || []) note.close();
+  } catch { /* notifications unavailable */ }
+}
+
 async function notifyLeave(target) {
   const title = "Hora de salir";
   const options = {
@@ -990,8 +1021,7 @@ async function notifyLeave(target) {
     requireInteraction: true,
     vibrate: [300, 150, 300],
   };
-  beep();
-  navigator.vibrate?.([300, 150, 300]);
+  startRinging(target);
   if (!("Notification" in window) || Notification.permission !== "granted") return;
   try {
     const registration = await navigator.serviceWorker?.ready;
@@ -1443,6 +1473,11 @@ window.addEventListener("online", () => {
 });
 setInterval(paintWaits, 1000);
 setInterval(checkAlarm, 1000);
+document.addEventListener("pointerdown", stopRinging, true);
+document.addEventListener("keydown", stopRinging, true);
+navigator.serviceWorker?.addEventListener("message", (event) => {
+  if (event.data?.type === "stop-ringing") stopRinging();
+});
 document.addEventListener("visibilitychange", checkAlarm);
 window.addEventListener("walk-time", paintWaits);
 setInterval(() => {
