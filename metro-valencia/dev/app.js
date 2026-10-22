@@ -921,13 +921,53 @@ function writeDestFilters(filters) {
   try { localStorage.setItem(DEST_KEY, JSON.stringify(filters)); } catch { /* private mode */ }
 }
 
-function pickedEntries(stationId) {
-  const list = readDestFilters()[stationId];
+function normalizeEntries(list) {
   if (!Array.isArray(list)) return [];
   return list
     .map((entry) => typeof entry === "string" ? { name: entry, lines: [] } : entry)
     .filter((entry) => entry && typeof entry.name === "string" && entry.name)
     .map(({ name, lines }) => ({ name, lines: Array.isArray(lines) ? lines.filter((line) => line && line.chip) : [] }));
+}
+
+function pickedEntries(stationId) {
+  return normalizeEntries(readDestFilters()[stationId]);
+}
+
+function mergeGroups(target, groups) {
+  for (const group of groups) {
+    let known = target.find((item) => item.name === group.name);
+    if (!known) {
+      known = { name: group.name, lines: [] };
+      target.push(known);
+    }
+    for (const { chip, color, text } of group.lines) {
+      if (!known.lines.some((line) => line.chip === chip)) known.lines.push({ chip, color, text });
+    }
+  }
+  return target;
+}
+
+const SEEN_KEY = "metro-valencia-destinos-vistos";
+
+function readSeen() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(SEEN_KEY));
+    return saved && typeof saved === "object" ? saved : {};
+  } catch {
+    return {};
+  }
+}
+
+function rememberDestinations(data) {
+  const seen = readSeen();
+  seen[data.id] = mergeGroups(normalizeEntries(seen[data.id]), destinationGroups(data.departures));
+  try { localStorage.setItem(SEEN_KEY, JSON.stringify(seen)); } catch { /* private mode */ }
+}
+
+function filterGroups(data) {
+  const groups = normalizeEntries(readSeen()[data.id]);
+  mergeGroups(groups, destinationGroups(data.departures));
+  return mergeGroups(groups, pickedEntries(data.id));
 }
 
 function selectedDestinations(stationId) {
@@ -965,9 +1005,8 @@ function toggleDestination(name) {
   const index = picked.findIndex((entry) => entry.name === name);
   if (index >= 0) picked.splice(index, 1);
   else {
-    const group = destinationGroups(view.departures).find((item) => item.name === name);
-    const lines = (group?.lines || []).map(({ chip, color, text }) => ({ chip, color, text }));
-    picked.push({ name, lines });
+    const group = filterGroups(view).find((item) => item.name === name);
+    picked.push({ name, lines: group?.lines || [] });
   }
   const filters = readDestFilters();
   if (picked.length) filters[view.id] = picked;
@@ -977,12 +1016,8 @@ function toggleDestination(name) {
 }
 
 function destinationFilter(data) {
-  const groups = destinationGroups(data.departures);
-  const entries = pickedEntries(data.id);
-  const picked = new Set(entries.map((entry) => entry.name));
-  for (const entry of entries) {
-    if (!groups.some((group) => group.name === entry.name)) groups.push(entry);
-  }
+  const groups = filterGroups(data);
+  const picked = new Set(selectedDestinations(data.id));
   if (!groups.length) return "";
   const chips = groups.map(({ name, lines }) => {
     const on = picked.has(name);
@@ -1055,6 +1090,7 @@ function restoreBoards() {
     for (const [id, data] of Object.entries(saved)) {
       if (!stationById(id) || !data || !Array.isArray(data.departures)) continue;
       cache.set(id, data);
+      rememberDestinations({ id, departures: data.departures });
     }
   } catch { /* keep an empty cache */ }
 }
@@ -1104,6 +1140,7 @@ async function load(id) {
     fetchedAt: Date.now(),
   };
   cache.set(station.id, view);
+  rememberDestinations(view);
   saveBoards();
   render(view);
 }
