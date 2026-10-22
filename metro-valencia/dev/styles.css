@@ -639,6 +639,8 @@ body.is-offline #fresh {
   touch-action: manipulation;
 }
 
+.dest-chip:not(:has(.chip)) { padding-left: 12px; }
+
 .dest-chip .chip {
   height: 1.7rem;
   min-width: 2.35rem;

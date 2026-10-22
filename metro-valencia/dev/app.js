@@ -783,21 +783,29 @@ function madridSeconds(date = new Date()) {
   return read("hour") * 3600 + read("minute") * 60 + read("second");
 }
 
+const MARGIN_SECONDS = 60;
+
 function parseDepartures(html) {
   const now = madridSeconds();
   const departures = [];
   const pattern = /linea_metro_(\d+)\.png[\s\S]*?<b>([^<]*)<\/b>\s*-\s*<span>(\d{2}:\d{2}:\d{2})<\/span>/g;
   for (const match of html.matchAll(pattern)) {
     const [hour, minute, second] = match[3].split(":").map(Number);
-    let delta = hour * 3600 + minute * 60 + second - now;
+    let clock = hour * 3600 + minute * 60 + second;
+    let delta = clock - now;
     let tomorrow = false;
     if (delta < -90) {
       delta += 24 * 3600;
       tomorrow = true;
     }
+    if (delta > MARGIN_SECONDS) {
+      const shift = Math.min(MARGIN_SECONDS, delta - MARGIN_SECONDS);
+      delta -= shift;
+      clock = (clock - shift + 24 * 3600) % (24 * 3600);
+    }
     const [color, text] = LINE_COLORS[match[1]] || ["#555", "#fff"];
     departures.push({
-      time: `${String(hour).padStart(2, "0")}:${String(minute).padStart(2, "0")}`,
+      time: `${String(Math.floor(clock / 3600)).padStart(2, "0")}:${String(Math.floor(clock / 60) % 60).padStart(2, "0")}`,
       headsign: decodeHtml(match[2]),
       tomorrow,
       at: Date.now() + delta * 1000,
@@ -857,6 +865,7 @@ function leaveInfo(departure) {
   if (typeof window.walkSeconds !== "number") return null;
   const walk = Math.max(1, Math.round(window.walkSeconds / 60));
   const minutes = Math.round(minutesUntil(departure) - walk);
+  if (window.walkSeconds < 60) return { minutes, icon: "runner" };
   const icon = minutes < 0 ? "late" : minutes < 3 ? "runner" : "coffee";
   return { minutes, icon };
 }
@@ -912,9 +921,17 @@ function writeDestFilters(filters) {
   try { localStorage.setItem(DEST_KEY, JSON.stringify(filters)); } catch { /* private mode */ }
 }
 
-function selectedDestinations(stationId) {
+function pickedEntries(stationId) {
   const list = readDestFilters()[stationId];
-  return Array.isArray(list) ? list.filter((name) => typeof name === "string" && name) : [];
+  if (!Array.isArray(list)) return [];
+  return list
+    .map((entry) => typeof entry === "string" ? { name: entry, lines: [] } : entry)
+    .filter((entry) => entry && typeof entry.name === "string" && entry.name)
+    .map(({ name, lines }) => ({ name, lines: Array.isArray(lines) ? lines.filter((line) => line && line.chip) : [] }));
+}
+
+function selectedDestinations(stationId) {
+  return pickedEntries(stationId).map((entry) => entry.name);
 }
 
 function destinationGroups(departures) {
@@ -944,11 +961,16 @@ function visibleDepartures(data) {
 
 function toggleDestination(name) {
   if (!view || !name) return;
-  const picked = new Set(selectedDestinations(view.id));
-  if (picked.has(name)) picked.delete(name);
-  else picked.add(name);
+  const picked = pickedEntries(view.id);
+  const index = picked.findIndex((entry) => entry.name === name);
+  if (index >= 0) picked.splice(index, 1);
+  else {
+    const group = destinationGroups(view.departures).find((item) => item.name === name);
+    const lines = (group?.lines || []).map(({ chip, color, text }) => ({ chip, color, text }));
+    picked.push({ name, lines });
+  }
   const filters = readDestFilters();
-  if (picked.size) filters[view.id] = [...picked];
+  if (picked.length) filters[view.id] = picked;
   else delete filters[view.id];
   writeDestFilters(filters);
   render(view);
@@ -956,8 +978,12 @@ function toggleDestination(name) {
 
 function destinationFilter(data) {
   const groups = destinationGroups(data.departures);
+  const entries = pickedEntries(data.id);
+  const picked = new Set(entries.map((entry) => entry.name));
+  for (const entry of entries) {
+    if (!groups.some((group) => group.name === entry.name)) groups.push(entry);
+  }
   if (!groups.length) return "";
-  const picked = new Set(selectedDestinations(data.id));
   const chips = groups.map(({ name, lines }) => {
     const on = picked.has(name);
     const marks = lines.map((line) => chip(line.chip || "", line.color || "#333", line.text)).join("");
