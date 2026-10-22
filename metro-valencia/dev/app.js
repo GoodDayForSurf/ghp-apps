@@ -788,8 +788,12 @@ const MARGIN_SECONDS = 60;
 function parseDepartures(html) {
   const now = madridSeconds();
   const departures = [];
+  const seen = new Set();
   const pattern = /linea_metro_(\d+)\.png[\s\S]*?<b>([^<]*)<\/b>\s*-\s*<span>(\d{2}:\d{2}:\d{2})<\/span>/g;
   for (const match of html.matchAll(pattern)) {
+    const key = `${match[1]}|${match[2].trim()}|${match[3]}`;
+    if (seen.has(key)) continue;
+    seen.add(key);
     const [hour, minute, second] = match[3].split(":").map(Number);
     let clock = hour * 3600 + minute * 60 + second;
     let delta = clock - now;
@@ -861,10 +865,13 @@ const LEAVE_ICONS = {
   coffee: `<span class="leave-slot"><img class="leave-icon" src="coffee.svg" alt=""></span>`,
 };
 
+function walkMinutes() {
+  return Math.max(1, Math.round(window.walkSeconds / 60));
+}
+
 function leaveInfo(departure) {
   if (typeof window.walkSeconds !== "number") return null;
-  const walk = Math.max(1, Math.round(window.walkSeconds / 60));
-  const minutes = Math.round(minutesUntil(departure) - walk);
+  const minutes = Math.round(minutesUntil(departure) - walkMinutes());
   if (window.walkSeconds < 60) return { minutes, icon: "runner" };
   const icon = minutes < 0 ? "late" : minutes < 3 ? "runner" : "coffee";
   return { minutes, icon };
@@ -895,6 +902,138 @@ function paintLeave(cell, departure) {
   }
   const time = cell.querySelector(".leave-time");
   if (time) time.textContent = leaveLabel(info.minutes);
+  const armed = isAlarm(departure);
+  const bell = cell.querySelector(".leave-bell");
+  if (armed && !bell) cell.insertAdjacentHTML("beforeend", BELL_ICON);
+  if (!armed && bell) bell.remove();
+  cell.classList.toggle("is-armed", armed);
+}
+
+const ALARM_KEY = "metro-valencia-aviso";
+const ALARM_MARGIN_MIN = 1;
+const BELL_ICON = `<svg class="leave-bell" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M12 3a6 6 0 0 0-6 6v4l-2 3h16l-2-3V9a6 6 0 0 0-6-6Z" fill="currentColor"/><path d="M10 19a2 2 0 0 0 4 0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>`;
+let alarm = readAlarm();
+let audio = null;
+
+function readAlarm() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(ALARM_KEY));
+    return saved && typeof saved.at === "number" && saved.station ? saved : null;
+  } catch {
+    return null;
+  }
+}
+
+function writeAlarm(next) {
+  alarm = next;
+  try {
+    if (next) localStorage.setItem(ALARM_KEY, JSON.stringify(next));
+    else localStorage.removeItem(ALARM_KEY);
+  } catch { /* private mode */ }
+}
+
+function sameTrain(departure, target) {
+  return (departure.headsign || "").trim() === target.headsign
+    && (departure.line?.chip || "") === target.chip
+    && Math.abs(departure.at - target.at) < 2 * 60_000;
+}
+
+function alarmTrain() {
+  if (!alarm || !view || view.id !== alarm.station) return null;
+  const matches = view.departures.filter((departure) => sameTrain(departure, alarm));
+  if (!matches.length) return null;
+  return matches.reduce((best, item) => Math.abs(item.at - alarm.at) < Math.abs(best.at - alarm.at) ? item : best);
+}
+
+function isAlarm(departure) {
+  const train = alarmTrain();
+  return Boolean(train) && departure.at === train.at && sameTrain(departure, alarm);
+}
+
+function syncAlarm() {
+  const nearest = alarmTrain();
+  if (!nearest) return;
+  const walk = typeof window.walkSeconds === "number" ? walkMinutes() : alarm.walk;
+  if (nearest.at !== alarm.at || walk !== alarm.walk) writeAlarm({ ...alarm, at: nearest.at, time: nearest.time, walk });
+}
+
+function unlockSound() {
+  try {
+    audio ||= new AudioContext();
+    if (audio.state === "suspended") audio.resume();
+  } catch { /* no Web Audio */ }
+}
+
+function beep() {
+  if (!audio) return;
+  const start = audio.currentTime;
+  for (const offset of [0, 0.35]) {
+    const tone = audio.createOscillator();
+    const gain = audio.createGain();
+    tone.frequency.value = 880;
+    gain.gain.setValueAtTime(0.0001, start + offset);
+    gain.gain.exponentialRampToValueAtTime(0.4, start + offset + 0.02);
+    gain.gain.exponentialRampToValueAtTime(0.0001, start + offset + 0.25);
+    tone.connect(gain).connect(audio.destination);
+    tone.start(start + offset);
+    tone.stop(start + offset + 0.3);
+  }
+}
+
+async function notifyLeave(target) {
+  const title = "Hora de salir";
+  const options = {
+    body: `${target.chip} ${target.headsign} · ${target.time}`,
+    icon: "icon-192.png",
+    tag: "metro-aviso",
+    renotify: true,
+    requireInteraction: true,
+    vibrate: [300, 150, 300],
+  };
+  beep();
+  navigator.vibrate?.([300, 150, 300]);
+  if (!("Notification" in window) || Notification.permission !== "granted") return;
+  try {
+    const registration = await navigator.serviceWorker?.ready;
+    if (registration) await registration.showNotification(title, options);
+    else new Notification(title, options);
+  } catch { /* notifications unavailable */ }
+}
+
+function checkAlarm() {
+  if (!alarm) return;
+  if (alarm.at < Date.now()) {
+    writeAlarm(null);
+    paintWaits();
+    return;
+  }
+  syncAlarm();
+  const left = (alarm.at - Date.now()) / 60_000 - alarm.walk;
+  if (left > ALARM_MARGIN_MIN) return;
+  const target = alarm;
+  writeAlarm(null);
+  paintWaits();
+  notifyLeave(target);
+}
+
+function toggleAlarm(departure) {
+  if (!view || typeof window.walkSeconds !== "number") return;
+  unlockSound();
+  if (isAlarm(departure)) {
+    writeAlarm(null);
+  } else {
+    writeAlarm({
+      station: view.id,
+      headsign: (departure.headsign || "").trim(),
+      chip: departure.line?.chip || "",
+      time: departure.time || "",
+      at: departure.at,
+      walk: walkMinutes(),
+    });
+    if ("Notification" in window && Notification.permission === "default") Notification.requestPermission();
+  }
+  paintWaits();
+  checkAlarm();
 }
 
 function waitLabel(departure) {
@@ -1089,6 +1228,13 @@ function restoreBoards() {
     if (!saved || typeof saved !== "object") return;
     for (const [id, data] of Object.entries(saved)) {
       if (!stationById(id) || !data || !Array.isArray(data.departures)) continue;
+      const seen = new Set();
+      data.departures = data.departures.filter((departure) => {
+        const key = `${departure.line?.chip}|${(departure.headsign || "").trim()}|${departure.at}`;
+        if (seen.has(key)) return false;
+        seen.add(key);
+        return true;
+      });
       cache.set(id, data);
       rememberDestinations({ id, departures: data.departures });
     }
@@ -1274,6 +1420,13 @@ window.addEventListener("hashchange", () => {
 });
 
 app.addEventListener("click", (event) => {
+  const leave = event.target.closest(".leave");
+  if (leave && view) {
+    const rows = [...document.querySelectorAll("#rows .row")];
+    const departure = visibleDepartures(view)[rows.indexOf(leave.closest(".row"))];
+    if (departure) toggleAlarm(departure);
+    return;
+  }
   const chip = event.target.closest(".dest-chip");
   if (!chip) return;
   toggleDestination(chip.dataset.dest);
@@ -1289,6 +1442,8 @@ window.addEventListener("online", () => {
   if (station) showWalk(station);
 });
 setInterval(paintWaits, 1000);
+setInterval(checkAlarm, 1000);
+document.addEventListener("visibilitychange", checkAlarm);
 window.addEventListener("walk-time", paintWaits);
 setInterval(() => {
   if (!navigator.onLine) return;

@@ -452,6 +452,16 @@ body.is-offline .zoom-btn {
 
 .leave.is-rush { color: var(--red); }
 
+.leave:not(:empty) {
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.leave-bell {
+  flex: none;
+  color: var(--red);
+}
+
 body.is-offline #fresh {
   color: var(--red);
   font-weight: 650;
