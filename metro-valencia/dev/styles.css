@@ -330,7 +330,7 @@ main {
 .board {
   flex: 0 0 auto;
   display: grid;
-  grid-template-rows: minmax(calc(50dvh - 8px - env(safe-area-inset-top)), auto) auto;
+  grid-template-rows: minmax(calc(40dvh - 8px - env(safe-area-inset-top)), auto) auto;
   grid-template-columns: minmax(0, 1fr);
   align-items: start;
   min-width: 0;
