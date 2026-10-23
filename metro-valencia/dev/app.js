@@ -788,8 +788,12 @@ const MARGIN_SECONDS = 60;
 function parseDepartures(html) {
   const now = madridSeconds();
   const departures = [];
+  const seen = new Set();
   const pattern = /linea_metro_(\d+)\.png[\s\S]*?<b>([^<]*)<\/b>\s*-\s*<span>(\d{2}:\d{2}:\d{2})<\/span>/g;
   for (const match of html.matchAll(pattern)) {
+    const key = `${match[1]}|${match[2].trim()}|${match[3]}`;
+    if (seen.has(key)) continue;
+    seen.add(key);
     const [hour, minute, second] = match[3].split(":").map(Number);
     let clock = hour * 3600 + minute * 60 + second;
     let delta = clock - now;
@@ -1089,6 +1093,13 @@ function restoreBoards() {
     if (!saved || typeof saved !== "object") return;
     for (const [id, data] of Object.entries(saved)) {
       if (!stationById(id) || !data || !Array.isArray(data.departures)) continue;
+      const seen = new Set();
+      data.departures = data.departures.filter((departure) => {
+        const key = `${departure.line?.chip}|${(departure.headsign || "").trim()}|${departure.at}`;
+        if (seen.has(key)) return false;
+        seen.add(key);
+        return true;
+      });
       cache.set(id, data);
       rememberDestinations({ id, departures: data.departures });
     }
