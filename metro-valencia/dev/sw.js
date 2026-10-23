@@ -1,4 +1,4 @@
-const CACHE = "metro-valencia-dev-v11";
+const CACHE = "metro-valencia-dev-v9";
 const SHELL = ["./index.html", "./app.js", "./walk.js", "./styles.css", "./plano.png", "./runer.svg", "./coffee.svg", "./no-time.webp", "./manifest.webmanifest", "./icon-192.png", "./icon-512.png", "./icon-maskable-512.png"];
 
 self.addEventListener("install", (event) => {
@@ -45,25 +45,5 @@ self.addEventListener("fetch", (event) => {
       if (cached) return cached;
       throw new Error("App is not available offline yet");
     }
-  })());
-});
-
-async function stopRinging() {
-  const windows = await self.clients.matchAll({ type: "window", includeUncontrolled: true });
-  for (const client of windows) client.postMessage({ type: "stop-ringing" });
-  return windows;
-}
-
-self.addEventListener("notificationclose", (event) => {
-  event.waitUntil(stopRinging());
-});
-
-self.addEventListener("notificationclick", (event) => {
-  event.notification.close();
-  event.waitUntil((async () => {
-    const windows = await stopRinging();
-    const open = windows.find((client) => client.url.startsWith(self.registration.scope));
-    if (open) return open.focus();
-    return self.clients.openWindow("./");
   })());
 });
