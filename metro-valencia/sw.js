@@ -1,5 +1,5 @@
-const CACHE = "metro-valencia-dev-v1";
-const SHELL = ["./index.html", "./app.js", "./styles.css", "./plano.png"];
+const CACHE = "metro-valencia-dev-v9";
+const SHELL = ["./index.html", "./app.js", "./walk.js", "./styles.css", "./plano.png", "./runer.svg", "./coffee.svg", "./no-time.webp", "./manifest.webmanifest", "./icon-192.png", "./icon-512.png", "./icon-maskable-512.png"];
 
 self.addEventListener("install", (event) => {
   event.waitUntil(

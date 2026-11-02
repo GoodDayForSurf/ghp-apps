@@ -783,21 +783,33 @@ function madridSeconds(date = new Date()) {
   return read("hour") * 3600 + read("minute") * 60 + read("second");
 }
 
+const MARGIN_SECONDS = 60;
+
 function parseDepartures(html) {
   const now = madridSeconds();
   const departures = [];
+  const seen = new Set();
   const pattern = /linea_metro_(\d+)\.png[\s\S]*?<b>([^<]*)<\/b>\s*-\s*<span>(\d{2}:\d{2}:\d{2})<\/span>/g;
   for (const match of html.matchAll(pattern)) {
+    const key = `${match[1]}|${match[2].trim()}|${match[3]}`;
+    if (seen.has(key)) continue;
+    seen.add(key);
     const [hour, minute, second] = match[3].split(":").map(Number);
-    let delta = hour * 3600 + minute * 60 + second - now;
+    let clock = hour * 3600 + minute * 60 + second;
+    let delta = clock - now;
     let tomorrow = false;
     if (delta < -90) {
       delta += 24 * 3600;
       tomorrow = true;
     }
+    if (delta > MARGIN_SECONDS) {
+      const shift = Math.min(MARGIN_SECONDS, delta - MARGIN_SECONDS);
+      delta -= shift;
+      clock = (clock - shift + 24 * 3600) % (24 * 3600);
+    }
     const [color, text] = LINE_COLORS[match[1]] || ["#555", "#fff"];
     departures.push({
-      time: `${String(hour).padStart(2, "0")}:${String(minute).padStart(2, "0")}`,
+      time: `${String(Math.floor(clock / 3600)).padStart(2, "0")}:${String(Math.floor(clock / 60) % 60).padStart(2, "0")}`,
       headsign: decodeHtml(match[2]),
       tomorrow,
       at: Date.now() + delta * 1000,
@@ -819,7 +831,7 @@ function formatSpan(value) {
   const rest = value % 60;
   if (hours === 0) return `${rest} min`;
   if (rest === 0) return `${hours} h`;
-  return `${hours} h ${rest} min`;
+  return `${hours} h ${rest}`;
 }
 
 function formatPast(minutes) {
@@ -844,7 +856,49 @@ function escapeHtml(value) {
 }
 
 function chip(code, color, text) {
-  return `<span class="chip" style="--c:${escapeHtml(color)};color:${escapeHtml(text || "#fff")}">${escapeHtml(code)}</span>`;
+  return `<span class="line"><span class="chip" style="--c:${escapeHtml(color)};color:${escapeHtml(text || "#fff")}">${escapeHtml(code)}</span></span>`;
+}
+
+const LEAVE_ICONS = {
+  late: `<span class="leave-slot"><img class="leave-icon" src="no-time.webp" alt=""></span>`,
+  runner: `<span class="leave-slot"><img class="leave-icon" src="runer.svg" alt=""></span>`,
+  coffee: `<span class="leave-slot"><img class="leave-icon" src="coffee.svg" alt=""></span>`,
+};
+
+function leaveInfo(departure) {
+  if (typeof window.walkSeconds !== "number") return null;
+  const walk = Math.max(1, Math.round(window.walkSeconds / 60));
+  const minutes = Math.round(minutesUntil(departure) - walk);
+  if (window.walkSeconds < 60) return { minutes, icon: "runner" };
+  const icon = minutes < 0 ? "late" : minutes < 3 ? "runner" : "coffee";
+  return { minutes, icon };
+}
+
+function leaveLabel(minutes) {
+  if (minutes < 0) return formatPast(minutes);
+  return formatWait(minutes);
+}
+
+function paintLeave(cell, departure) {
+  const info = leaveInfo(departure);
+  if (!info) {
+    cell.classList.remove("is-rush");
+    cell.removeAttribute("title");
+    delete cell.dataset.icon;
+    cell.replaceChildren();
+    return;
+  }
+  cell.classList.toggle("is-rush", info.icon !== "coffee");
+  cell.title = "Tiempo para salir";
+  const showTime = info.icon === "coffee";
+  if (cell.dataset.icon !== info.icon) {
+    cell.dataset.icon = info.icon;
+    cell.innerHTML = showTime
+      ? `${LEAVE_ICONS.coffee}<span class="leave-time"></span>`
+      : LEAVE_ICONS[info.icon];
+  }
+  const time = cell.querySelector(".leave-time");
+  if (time) time.textContent = leaveLabel(info.minutes);
 }
 
 function waitLabel(departure) {
@@ -856,25 +910,151 @@ function waitLabel(departure) {
   return formatWait(minutes) + delay;
 }
 
-function departureRows(departures) {
-  if (!departures.length) return '<p class="empty">No hay salidas.</p>';
+const DEST_KEY = "metro-valencia-destinos";
+
+function readDestFilters() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(DEST_KEY));
+    return saved && typeof saved === "object" ? saved : {};
+  } catch {
+    return {};
+  }
+}
+
+function writeDestFilters(filters) {
+  try { localStorage.setItem(DEST_KEY, JSON.stringify(filters)); } catch { /* private mode */ }
+}
+
+function normalizeEntries(list) {
+  if (!Array.isArray(list)) return [];
+  return list
+    .map((entry) => typeof entry === "string" ? { name: entry, lines: [] } : entry)
+    .filter((entry) => entry && typeof entry.name === "string" && entry.name)
+    .map(({ name, lines }) => ({ name, lines: Array.isArray(lines) ? lines.filter((line) => line && line.chip) : [] }));
+}
+
+function pickedEntries(stationId) {
+  return normalizeEntries(readDestFilters()[stationId]);
+}
+
+function mergeGroups(target, groups) {
+  for (const group of groups) {
+    let known = target.find((item) => item.name === group.name);
+    if (!known) {
+      known = { name: group.name, lines: [] };
+      target.push(known);
+    }
+    for (const { chip, color, text } of group.lines) {
+      if (!known.lines.some((line) => line.chip === chip)) known.lines.push({ chip, color, text });
+    }
+  }
+  return target;
+}
+
+const SEEN_KEY = "metro-valencia-destinos-vistos";
+
+function readSeen() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(SEEN_KEY));
+    return saved && typeof saved === "object" ? saved : {};
+  } catch {
+    return {};
+  }
+}
+
+function rememberDestinations(data) {
+  const seen = readSeen();
+  seen[data.id] = mergeGroups(normalizeEntries(seen[data.id]), destinationGroups(data.departures));
+  try { localStorage.setItem(SEEN_KEY, JSON.stringify(seen)); } catch { /* private mode */ }
+}
+
+function filterGroups(data) {
+  const groups = normalizeEntries(readSeen()[data.id]);
+  mergeGroups(groups, destinationGroups(data.departures));
+  return mergeGroups(groups, pickedEntries(data.id));
+}
+
+function selectedDestinations(stationId) {
+  return pickedEntries(stationId).map((entry) => entry.name);
+}
+
+function destinationGroups(departures) {
+  const groups = [];
+  const byName = new Map();
+  for (const departure of departures) {
+    const name = (departure.headsign || "").trim();
+    if (!name) continue;
+    let group = byName.get(name);
+    if (!group) {
+      group = { name, lines: [] };
+      byName.set(name, group);
+      groups.push(group);
+    }
+    const code = departure.line?.chip;
+    if (code && !group.lines.some((line) => line.chip === code)) group.lines.push(departure.line);
+  }
+  return groups;
+}
+
+function visibleDepartures(data) {
+  const picked = selectedDestinations(data.id);
+  if (!picked.length) return data.departures;
+  const allow = new Set(picked);
+  return data.departures.filter((departure) => allow.has((departure.headsign || "").trim()));
+}
+
+function toggleDestination(name) {
+  if (!view || !name) return;
+  const picked = pickedEntries(view.id);
+  const index = picked.findIndex((entry) => entry.name === name);
+  if (index >= 0) picked.splice(index, 1);
+  else {
+    const group = filterGroups(view).find((item) => item.name === name);
+    picked.push({ name, lines: group?.lines || [] });
+  }
+  const filters = readDestFilters();
+  if (picked.length) filters[view.id] = picked;
+  else delete filters[view.id];
+  writeDestFilters(filters);
+  render(view);
+}
+
+function destinationFilter(data) {
+  const groups = filterGroups(data);
+  const picked = new Set(selectedDestinations(data.id));
+  if (!groups.length) return "";
+  const chips = groups.map(({ name, lines }) => {
+    const on = picked.has(name);
+    const marks = lines.map((line) => chip(line.chip || "", line.color || "#333", line.text)).join("");
+    return `<button type="button" class="dest-chip${on ? " is-on" : ""}" data-dest="${escapeHtml(name)}" aria-pressed="${on ? "true" : "false"}">${marks}<span class="dest-chip-name">${escapeHtml(name)}</span></button>`;
+  }).join("");
+  return `<div class="dest-filter" role="group" aria-label="Destinos"><div class="dest-filter-list">${chips}</div></div>`;
+}
+
+function departureRows(departures, filtered) {
+  if (!departures.length) {
+    return `<p class="empty">${filtered ? "No hay salidas a esos destinos." : "No hay salidas."}</p>`;
+  }
   return departures.map((departure) => `<article class="row${isPast(departure) ? " is-past" : ""}">
       <span class="time">${escapeHtml(departure.time || "")}${departure.tomorrow ? '<small class="day">mañana</small>' : ""}</span>
       ${chip(departure.line?.chip || "", departure.line?.color || "#333", departure.line?.text)}
       <span class="dest">${escapeHtml(departure.headsign || "")}</span>
       <span class="wait">${escapeHtml(waitLabel(departure))}</span>
+      <span class="leave"></span>
     </article>`).join("");
 }
 
 function paintWaits() {
   if (!view) return;
   const rows = document.querySelectorAll("#rows .row");
-  view.departures.forEach((departure, index) => {
+  visibleDepartures(view).forEach((departure, index) => {
     const row = rows[index];
     if (!row) return;
     row.classList.toggle("is-past", isPast(departure));
     const wait = row.querySelector(".wait");
     if (wait) wait.textContent = waitLabel(departure);
+    const leave = row.querySelector(".leave");
+    if (leave) paintLeave(leave, departure);
   });
 }
 
@@ -888,11 +1068,15 @@ function render(data) {
   app.hidden = false;
   status.hidden = true;
   document.querySelector("#fresh").textContent = freshnessLabel(data);
+  const picked = selectedDestinations(data.id);
+  const departures = visibleDepartures(data);
   app.innerHTML = `
     <section class="board" aria-label="Próximas salidas">
-      <div id="rows">${departureRows(data.departures)}</div>
+      <div id="rows">${departureRows(departures, picked.length > 0)}</div>
+      ${destinationFilter(data)}
     </section>
   `;
+  paintWaits();
 }
 
 const BOARDS_KEY = "metro-valencia-boards";
@@ -909,7 +1093,15 @@ function restoreBoards() {
     if (!saved || typeof saved !== "object") return;
     for (const [id, data] of Object.entries(saved)) {
       if (!stationById(id) || !data || !Array.isArray(data.departures)) continue;
+      const seen = new Set();
+      data.departures = data.departures.filter((departure) => {
+        const key = `${departure.line?.chip}|${(departure.headsign || "").trim()}|${departure.at}`;
+        if (seen.has(key)) return false;
+        seen.add(key);
+        return true;
+      });
       cache.set(id, data);
+      rememberDestinations({ id, departures: data.departures });
     }
   } catch { /* keep an empty cache */ }
 }
@@ -959,6 +1151,7 @@ async function load(id) {
     fetchedAt: Date.now(),
   };
   cache.set(station.id, view);
+  rememberDestinations(view);
   saveBoards();
   render(view);
 }
@@ -978,6 +1171,11 @@ function showError(error) {
   app.innerHTML = `<div class="error"><strong>No se pudieron cargar las salidas.</strong><p>${escapeHtml(error.message)}</p></div>`;
 }
 
+function showWalk(station) {
+  const point = station && GEO.get(station.code);
+  walkTo(point ? { id: station.id, lon: point.lon, lat: point.lat } : null);
+}
+
 function selectTab(id, updateHash) {
   const station = stationById(id) || stationById(slots.find(Boolean));
   if (!station) return;
@@ -990,6 +1188,7 @@ function selectTab(id, updateHash) {
   });
   if (updateHash) history.replaceState(null, "", `#${station.id}`);
   load(station.id).catch(showError);
+  showWalk(station);
 }
 
 function onQueryKey(event, slot, index) {
@@ -1085,14 +1284,23 @@ window.addEventListener("hashchange", () => {
   selectTab(id, false);
 });
 
+app.addEventListener("click", (event) => {
+  const chip = event.target.closest(".dest-chip");
+  if (!chip) return;
+  toggleDestination(chip.dataset.dest);
+});
+
 selectTab(stationFromHash(), false);
 setOffline(!navigator.onLine);
 window.addEventListener("offline", () => setOffline(true));
 window.addEventListener("online", () => {
   setOffline(false);
   load(activeId).catch(showError);
+  const station = stationById(activeId);
+  if (station) showWalk(station);
 });
 setInterval(paintWaits, 1000);
+window.addEventListener("walk-time", paintWaits);
 setInterval(() => {
   if (!navigator.onLine) return;
   load(activeId).catch(showError);
