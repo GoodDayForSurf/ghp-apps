@@ -1,0 +1,17 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "dev",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["--yes", "http-server@14.1.1", "dev", "-p", "8137", "-c-1"],
+      "port": 8137
+    },
+    {
+      "name": "cards-trainer",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["--yes", "http-server@14.1.1", "../cards-trainer", "-p", "8138", "-c-1"],
+      "port": 8138
+    }
+  ]
+}
