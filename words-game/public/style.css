@@ -1,0 +1,878 @@
+:root {
+  --felt: #1b4634;
+  --felt-deep: #0e2a1f;
+  --ink: #1c1712;
+  --cream: #f4efe4;
+  --card: #f7f1e6;
+  --gold: #c6a15b;
+  --gold-deep: #8c6a32;
+  --clay: #9c3b32;
+  --focus: #4da3ff;
+  --line: rgba(244, 239, 228, 0.16);
+  --shadow: 0 14px 40px rgba(0, 0, 0, 0.28);
+  color: var(--cream);
+  font-family: "Segoe UI", "Helvetica Neue", sans-serif;
+  background:
+    radial-gradient(1200px 700px at 50% -10%, #245743 0%, transparent 55%),
+    var(--felt-deep);
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+}
+
+button, input { font: inherit; }
+
+button {
+  cursor: pointer;
+}
+
+#app { min-height: 100vh; }
+
+.join {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 32px 16px;
+}
+
+.join-card {
+  width: min(440px, 100%);
+  background: linear-gradient(180deg, #f8f3ea 0%, #efe4d2 100%);
+  color: var(--ink);
+  border-radius: 28px;
+  padding: 36px 32px 28px;
+  box-shadow: var(--shadow);
+}
+
+.eyebrow {
+  margin: 0 0 8px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-size: 12px;
+  color: var(--gold-deep);
+}
+
+.join-card h1 {
+  margin: 0;
+  font-family: Palatino, "Palatino Linotype", Georgia, serif;
+  font-size: 64px;
+  font-weight: 500;
+  letter-spacing: -0.04em;
+  line-height: 0.9;
+}
+
+.lede {
+  margin: 14px 0 0;
+  line-height: 1.45;
+}
+
+label {
+  display: block;
+  margin: 22px 0 8px;
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+input[type="text"] {
+  width: 100%;
+  border: 1px solid #ddc9a4;
+  background: #fffaf3;
+  color: var(--ink);
+  border-radius: 12px;
+  padding: 12px 14px;
+}
+
+.langs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.langs label {
+  margin: 0;
+  text-transform: none;
+  letter-spacing: 0;
+  border: 1px solid #ddc9a4;
+  border-radius: 12px;
+  padding: 10px 12px;
+  background: #fffaf3;
+}
+
+.langs input { margin-right: 6px; }
+
+.join-btn, .btn {
+  border: 0;
+  border-radius: 999px;
+  padding: 12px 18px;
+  background: var(--ink);
+  color: var(--cream);
+}
+
+.join-btn {
+  width: 100%;
+  margin-top: 18px;
+  padding: 14px 18px;
+  font-size: 18px;
+}
+
+.btn.gold { background: var(--gold-deep); color: #fff8ea; }
+.btn.ghost {
+  background: transparent;
+  color: var(--cream);
+  border: 1px solid var(--line);
+}
+.btn.danger { background: var(--clay); color: white; }
+
+.lobby-line {
+  min-height: 1.4em;
+  margin: 16px 0 0;
+  color: #5c5146;
+}
+
+.rules-note {
+  margin: 18px 0 0;
+  color: #5c5146;
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.table-page {
+  min-height: 100vh;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  grid-template-columns: 1fr 260px;
+  gap: 0 18px;
+  padding: 18px 18px 14px;
+}
+
+.top, .felt, .dock { grid-column: 1; }
+.log-panel { grid-column: 2; grid-row: 1 / span 3; }
+
+.top {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+
+.brand {
+  font-family: Palatino, "Palatino Linotype", Georgia, serif;
+  font-size: 28px;
+  letter-spacing: -0.03em;
+}
+
+.meta {
+  color: rgba(244, 239, 228, 0.78);
+  font-size: 14px;
+}
+
+.top-actions {
+  display: flex;
+  gap: 8px;
+  margin-left: auto;
+}
+
+.felt {
+  background:
+    radial-gradient(ellipse at 50% 40%, rgba(255, 255, 255, 0.05), transparent 46%),
+    linear-gradient(180deg, #226046, var(--felt) 40%, #143828);
+  border-radius: 36px;
+  box-shadow: inset 0 0 0 10px rgba(90, 58, 28, 0.35), var(--shadow);
+  padding: 22px 22px 16px;
+  display: grid;
+  grid-template-rows: auto 1fr;
+  min-height: 420px;
+}
+
+.opponents {
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  min-height: 92px;
+}
+
+.seat {
+  width: 180px;
+  padding: 10px 12px 12px;
+  border-radius: 16px;
+  background: rgba(0, 0, 0, 0.16);
+  border: 1px solid transparent;
+}
+
+.seat { display: flex; align-items: center; gap: 10px; }
+.seat.on { border-color: var(--gold); }
+.seat .seat-name { flex: 1; min-width: 0; }
+/* Points of the player */
+.count {
+  flex-shrink: 0;
+  min-width: 28px;
+  padding: 4px 6px;
+  border-radius: 6px;
+  text-align: center;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--ink);
+  background: var(--card);
+}
+.seat.you { outline: 1px dashed rgba(244, 239, 228, 0.3); }
+
+.seat-name {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 14px;
+}
+
+.role {
+  color: var(--gold);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.sub { display: flex; align-items: baseline; gap: 8px; }
+.score { font-size: 12px; color: rgba(244, 239, 228, 0.78); white-space: nowrap; }
+
+.backs {
+  display: flex;
+  gap: 4px;
+  margin-top: 8px;
+  min-height: 36px;
+}
+
+.back {
+  width: 24px;
+  height: 34px;
+  border-radius: 4px;
+  background:
+    radial-gradient(circle at 50% 45%, transparent 28%, rgba(198, 161, 91, 0.7) 29%, rgba(198, 161, 91, 0.7) 34%, transparent 35%),
+    repeating-linear-gradient(135deg, #163728 0 3px, #1e4a36 3px 6px);
+  box-shadow: inset 0 0 0 1px rgba(198, 161, 91, 0.45);
+}
+
+/* The stock sits in the left corner; the play area keeps equal side
+   margins so the cards stay centred on the felt. */
+.center {
+  --side: 86px;
+  --step: 72px;   /* table card height + gap inside a column */
+  --colpad: 4px;
+  position: relative;
+  padding-top: 16px;
+  min-height: 180px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.stock {
+  position: absolute;
+  left: 0;
+  top: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.stock-count {
+  color: var(--gold);
+  font-family: Palatino, Georgia, serif;
+  font-size: 22px;
+  line-height: 1;
+}
+
+/* Room for two letters above the attack line, so it sits at a fixed height. */
+.play { overflow: visible; padding: calc(2 * var(--step)) var(--side) 0; }
+
+.cross {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: calc(var(--lift, 0) * var(--step) * -1);
+}
+.cross-row { display: flex; gap: 8px; align-items: flex-start; justify-content: center; flex-wrap: wrap; }
+/* flex: no inline line-box under the card, so every card is exactly its height */
+.piece { position: relative; display: flex; }
+.mini {
+  position: absolute;
+  z-index: 6;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 6px;
+  background: #10281c;
+  border: 1px solid var(--gold);
+  border-radius: 10px;
+  box-shadow: var(--shadow);
+}
+.mini.side { left: calc(100% + 8px); top: 0; }
+.mini.below { top: calc(100% + 6px); left: 50%; transform: translateX(-50%); }
+.mini button {
+  border: 0;
+  border-radius: 8px;
+  background: var(--cream);
+  color: var(--ink);
+  padding: 6px 10px;
+  white-space: nowrap;
+  font-size: 13px;
+}
+.mini button:disabled { opacity: 0.35; cursor: default; }
+.col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: var(--colpad);
+  /* --pad: empty card places above, so attack letters of a word line up */
+  margin-top: calc(var(--pad, 0) * var(--step));
+  border-radius: 12px;
+}
+.col.on { outline: 1px solid rgba(198, 161, 91, 0.45); }
+/* Where the next card from the hand lands: above or below the word */
+.slot {
+  width: 48px;
+  height: 68px;
+  padding: 0;
+  border: 1px dashed rgba(244, 239, 228, 0.35);
+  border-radius: 10px;
+  background: transparent;
+  color: rgba(244, 239, 228, 0.5);
+  font-size: 22px;
+  line-height: 1;
+}
+.slot.on {
+  border: 2px dashed var(--gold);
+  background: rgba(198, 161, 91, 0.16);
+  color: var(--gold);
+}
+.caret {
+  width: 44px;
+  height: 3px;
+  margin: 1px 0;
+  border-radius: 2px;
+  background: var(--gold);
+  display: block;
+}
+.space-gap {
+  width: 22px;
+  align-self: stretch;
+  min-height: 68px;
+  border: 0;
+  border-radius: 8px;
+  background: rgba(244, 239, 228, 0.14);
+  cursor: pointer;
+}
+.vabove, .vbelow { display: flex; flex-direction: column; gap: 4px; }
+.cross .card, .piece .card { width: 48px; height: 68px; }
+.cross .card .letter, .piece .card .letter { font-size: 28px; line-height: 68px; }
+
+.word {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  margin: 6px 0;
+  flex-wrap: wrap;
+}
+
+.word .tag {
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(244, 239, 228, 0.62);
+  width: 72px;
+}
+
+.prompt {
+  text-align: center;
+  margin: 8px 0 0;
+  font-size: 18px;
+  line-height: 1.35;
+}
+
+.card {
+  width: 68px;
+  height: 96px;
+  border: 0;
+  border-radius: 10px;
+  background: var(--card);
+  color: var(--ink);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.18);
+  position: relative;
+  padding: 0;
+}
+
+.card .letter {
+  font-family: Palatino, "Palatino Linotype", Georgia, serif;
+  font-size: 40px;
+  line-height: 96px;
+}
+
+.card .as {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 6px;
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  color: var(--gold-deep);
+}
+
+/* Letter price, Scrabble-style, in the corner */
+.card .pts {
+  position: absolute;
+  right: 5px;
+  bottom: 3px;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1;
+  color: #6b5f52;
+}
+.cross .card .pts, .piece .card .pts, .stock .card .pts { right: 4px; bottom: 3px; font-size: 14px; }
+
+.card.trump .letter { color: #c4281c; }
+.card.trump { box-shadow: 0 0 0 2px var(--gold), 0 8px 16px rgba(0, 0, 0, 0.18); }
+
+.card.playable { transform: translateY(-6px); }
+.card.beat { transform: translateY(-4px) scale(1.05); box-shadow: 0 0 0 2px #f0d48a, 0 10px 20px rgba(0, 0, 0, 0.25); }
+/* On the table the attack letter is marked by its glow only: lifting it
+   would make the gap above it smaller than the gap below. */
+.cross .card.beat { transform: none; }
+.card.selected { box-shadow: 0 0 0 3px var(--gold), 0 10px 18px rgba(0, 0, 0, 0.28); }
+.card.dim { opacity: 0.45; }
+.card:disabled { cursor: default; }
+
+.dock {
+  margin-top: 14px;
+  background: rgba(8, 20, 16, 0.45);
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  padding: 12px 14px 14px;
+}
+
+.you-line {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+
+.builder {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: center;
+  min-height: 52px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+
+.builder .card { width: 52px; height: 72px; }
+.builder .card .letter { font-size: 32px; line-height: 72px; }
+
+.hand {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  min-height: 104px;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  margin-top: 12px;
+}
+
+.wilds {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 8px;
+}
+
+.wilds button {
+  min-width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--cream);
+}
+
+.log-panel {
+  background: rgba(8, 20, 16, 0.45);
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  padding: 16px 14px;
+  overflow: auto;
+}
+
+.log-panel h2 {
+  margin: 0 0 10px;
+  font-size: 13px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: rgba(244, 239, 228, 0.7);
+}
+
+.log-panel ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.log-panel li {
+  margin: 0 0 8px;
+  line-height: 1.35;
+  font-size: 14px;
+}
+
+.error {
+  margin: 8px 0 0;
+  color: #ffb4a8;
+  min-height: 1.2em;
+}
+
+.banner {
+  margin-top: 10px;
+  padding: 14px 16px;
+  border-radius: 16px;
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.scores {
+  list-style: none;
+  margin: 10px auto 0;
+  padding: 0;
+  max-width: 260px;
+}
+.scores li {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 3px 0;
+  border-top: 1px solid var(--line);
+}
+
+.banner strong {
+  font-family: Palatino, Georgia, serif;
+  font-size: 32px;
+  font-weight: 500;
+}
+
+.help {
+  margin-top: 8px;
+  color: rgba(244, 239, 228, 0.72);
+  font-size: 13px;
+}
+
+@media (max-width: 860px) {
+  .table-page {
+    grid-template-columns: 1fr;
+    padding: 12px;
+  }
+  .log-panel { grid-column: 1; grid-row: auto; max-height: 180px; }
+  .center { --side: 66px; }
+  .join-card h1 { font-size: 52px; }
+  .card { width: 54px; height: 78px; }
+  .card .letter { font-size: 32px; line-height: 78px; }
+}
+
+/* Touch devices: no double-tap zoom, no grey tap flash */
+button, .card, label { touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+
+@supports (min-height: 100dvh) {
+  body, #app, .join, .table-page { min-height: 100dvh; }
+}
+
+/* Phones */
+@media (max-width: 600px) {
+  .join { padding: 16px 12px; place-items: start center; }
+  .join-card { padding: 24px 20px 20px; border-radius: 22px; }
+  .join-card h1 { font-size: 44px; }
+  input[type="text"] { font-size: 16px; }
+
+  .table-page {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+    padding: 8px;
+    padding-top: max(8px, env(safe-area-inset-top));
+    padding-left: max(8px, env(safe-area-inset-left));
+    padding-right: max(8px, env(safe-area-inset-right));
+    padding-bottom: max(8px, env(safe-area-inset-bottom));
+  }
+
+  .top { flex-wrap: wrap; gap: 4px 10px; margin-bottom: 8px; }
+  .meta { font-size: 13px; }
+  .top-actions .btn { padding: 8px 12px; font-size: 14px; }
+
+  .felt {
+    border-radius: 22px;
+    box-shadow: inset 0 0 0 5px rgba(90, 58, 28, 0.35), var(--shadow);
+    padding: 12px 10px 10px;
+    min-height: 54vh;
+    min-height: 54dvh;
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  /* Opponent = one line: name, role, cards in hand */
+  .opponents { gap: 6px; flex-wrap: nowrap; min-height: 0; }
+  .seat {
+    flex: 1 1 0;
+    min-width: 0;
+    width: auto;
+    max-width: 200px;
+    padding: 6px 8px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .seat-name { flex: 1; min-width: 0; flex-direction: column; gap: 1px; font-size: 14px; line-height: 1.2; }
+  .seat-name span:first-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .role { font-size: 10px; }
+  .role:empty { display: none; }
+  .sub { gap: 5px; min-height: 12px; }
+  .score { font-size: 11px; }
+  .backs { margin: 0; min-height: 0; flex-shrink: 0; }
+  .backs .back { display: none; }
+  .count {
+    min-width: 20px;
+    padding: 3px 4px;
+    border-radius: 4px;
+    text-align: center;
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.2;
+    color: var(--ink);
+    background: var(--card);
+  }
+
+  .center { --side: 38px; --step: 47px; --colpad: 2px; padding-top: 10px; min-height: 110px; }
+  .stock { gap: 4px; min-width: 32px; top: 10px; }
+  .stock-count { font-size: 15px; }
+  .stock .card { width: 32px; height: 44px; border-radius: 6px; }
+  .stock .card .letter { font-size: 20px; line-height: 44px; }
+
+  .cross { gap: 10px; }
+  .cross-row { gap: 3px; justify-content: center; }
+  .col { gap: 3px; border-radius: 8px; }
+  .slot { width: 32px; height: 44px; border-radius: 6px; font-size: 18px; }
+  .cross .card, .piece .card { width: 32px; height: 44px; border-radius: 6px; box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2); }
+  .cross .card.trump, .piece .card.trump { box-shadow: 0 0 0 2px var(--gold), 0 3px 8px rgba(0, 0, 0, 0.2); }
+  .cross .card .letter, .piece .card .letter { font-size: 20px; line-height: 44px; }
+  .cross .card .as { bottom: 1px; font-size: 8px; }
+  .card .pts { right: 3px; bottom: 2px; font-size: 14px; }
+  .cross .card .pts, .piece .card .pts, .stock .card .pts { right: 2px; bottom: 1px; font-size: 11px; }
+  .space-gap { width: 14px; min-height: 44px; }
+  .prompt { font-size: 15px; text-align: center; }
+  .banner { padding: 10px 12px; text-align: center; }
+  .banner strong { font-size: 26px; }
+
+  /* Letter menu becomes a bar pinned to the bottom of the screen */
+  .mini, .mini.side, .mini.below {
+    position: fixed;
+    left: 8px;
+    right: 8px;
+    top: auto;
+    bottom: max(8px, env(safe-area-inset-bottom));
+    transform: none;
+    flex-direction: row;
+    gap: 6px;
+    padding: 8px;
+    border-radius: 14px;
+    z-index: 20;
+  }
+  .mini button { flex: 1; padding: 14px 2px; font-size: 14px; }
+
+  .dock { margin-top: 8px; border-radius: 18px; padding: 10px 8px 10px; }
+  .you-line { font-size: 13px; margin-bottom: 6px; }
+
+  .builder { gap: 6px; min-height: 0; }
+  .builder > span { flex-basis: 100%; font-size: 13px; }
+  .builder .btn { flex: 1 1 auto; padding: 11px 10px; font-size: 14px; }
+
+  .hand { gap: 6px; min-height: 76px; padding-top: 6px; }
+  .card { width: 46px; height: 66px; border-radius: 8px; }
+  .card .letter { font-size: 28px; line-height: 66px; }
+  .card .as { bottom: 3px; font-size: 9px; }
+
+  .actions { margin-top: 8px; }
+  .actions .btn { flex: 1 1 auto; min-height: 46px; font-size: 16px; }
+
+  .wilds { gap: 5px; justify-content: center; flex-basis: 100%; }
+  .wilds button { min-width: 36px; height: 36px; font-size: 16px; }
+
+  .error { margin-top: 6px; font-size: 14px; text-align: center; }
+  .help { font-size: 12px; margin: 6px 0 0; }
+  .dock .help { display: none; }
+
+  .log-panel { margin-top: 8px; border-radius: 18px; padding: 12px; max-height: 160px; }
+  .log-panel li { font-size: 13px; margin-bottom: 5px; }
+}
+
+@media (max-width: 350px) {
+  .card { width: 40px; height: 58px; }
+  .card .letter { font-size: 24px; line-height: 58px; }
+  .cross .card, .piece .card { width: 28px; height: 40px; }
+  .cross .card .letter, .piece .card .letter { font-size: 18px; line-height: 40px; }
+  .space-gap { min-height: 40px; }
+  .center { --side: 34px; --step: 43px; }
+  .slot { width: 28px; height: 40px; }
+  .stock { min-width: 28px; }
+  .stock .card { width: 28px; height: 40px; }
+  .stock .card .letter { font-size: 18px; line-height: 40px; }
+}
+
+/* ---- The table grid: every card sits in a cell, like a crossword ----
+   Cells shrink to fit the felt when the crossword gets wide. */
+.play {
+  padding: 0;
+  container-type: inline-size;
+}
+.board {
+  --gap: 4px;
+  --cell-max: 48px;
+  --cell: min(var(--cell-max), calc((100cqw - (var(--cols) - 1) * var(--gap)) / var(--cols)));
+  --cell-h: calc(var(--cell) * 1.4);
+  display: grid;
+  grid-template-columns: repeat(var(--cols), var(--cell));
+  grid-template-rows: repeat(var(--rows), var(--cell-h));
+  gap: var(--gap);
+  justify-content: center;
+}
+.board .piece { width: var(--cell); height: var(--cell-h); }
+.board .card,
+.board .slot {
+  width: var(--cell);
+  height: var(--cell-h);
+  border-radius: calc(var(--cell) * 0.18);
+}
+.board .card { box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2); transform: none; }
+.board .card .letter {
+  font-size: calc(var(--cell) * 0.6);
+  line-height: var(--cell-h);
+}
+.board .card .pts {
+  right: calc(var(--cell) * 0.08);
+  bottom: calc(var(--cell) * 0.05);
+  font-size: max(11px, calc(var(--cell) * 0.32));
+}
+
+/* A move waiting to be accepted */
+.board .card.fresh { box-shadow: 0 0 0 2px #f0d48a, 0 3px 8px rgba(0, 0, 0, 0.2); }
+/* Your own letters, not sent yet */
+.board .card.own { background: #fff3cf; }
+.board .card.selected { box-shadow: 0 0 0 3px var(--gold), 0 3px 8px rgba(0, 0, 0, 0.25); }
+.board .card:disabled { cursor: default; }
+
+@media (max-width: 600px) {
+  .board { --gap: 3px; --cell-max: 34px; }
+}
+
+/* The focused card on the table: a gold bar on the edge where the next card
+   from the hand goes. Clicking the card again moves it clockwise. */
+.board .card.focus { z-index: 2; box-shadow: 0 0 0 2px var(--focus), 0 3px 8px rgba(0, 0, 0, 0.25); }
+.board .card.focus::after {
+  content: '';
+  position: absolute;
+  background: var(--focus);
+  border-radius: 3px;
+  box-shadow: 0 0 8px rgba(77, 163, 255, 0.95);
+}
+.board .card.edge-up::after { left: 12%; right: 12%; top: -7px; height: 5px; }
+.board .card.edge-right::after { top: 12%; bottom: 12%; right: -7px; width: 5px; }
+.board .card.edge-down::after { left: 12%; right: 12%; bottom: -7px; height: 5px; }
+.board .card.edge-left::after { top: 12%; bottom: 12%; left: -7px; width: 5px; }
+
+/* Popup between rounds */
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  display: grid;
+  place-items: center;
+  padding: 16px;
+  background: rgba(4, 12, 9, 0.55);
+}
+.dialog {
+  width: min(340px, 100%);
+  padding: 20px 18px 18px;
+  border-radius: 20px;
+  border: 1px solid var(--line);
+  background: #123426;
+  box-shadow: var(--shadow);
+  text-align: center;
+}
+.dialog strong {
+  font-family: Palatino, Georgia, serif;
+  font-size: 28px;
+  font-weight: 500;
+}
+.dialog .scores { margin: 14px 0 16px; max-width: none; text-align: left; }
+.dialog .scores li.ready span:last-child { color: #8fd18f; }
+.dialog .btn { width: 100%; min-height: 48px; font-size: 17px; }
+.dialog .waiting { margin: 0; color: rgba(244, 239, 228, 0.78); }
+
+/* Choosing the letter to swap when skipping */
+.hand.swapping .card:not(:disabled) { box-shadow: 0 0 0 2px var(--focus), 0 8px 16px rgba(0, 0, 0, 0.18); }
+.pick-note { flex-basis: 100%; text-align: center; font-size: 15px; }
+
+/* Price colours, cheap to dear: black, blue, green, yellow, orange, red,
+   purple. The yellow is a dark gold so it reads on the cream card. */
+.card .pts.p1 { color: #1c1712; }
+.card .pts.p2 { color: #1f5fd1; }
+.card .pts.p3 { color: #1e8a3c; }
+.card .pts.p4 { color: #b88a00; }
+.card .pts.p5 { color: #e06a00; }
+.card .pts.p8 { color: #d0261b; }
+.card .pts.p10 { color: #7b3fc4; }
+
+/* Players and their points, in the header */
+.meta { flex: 1; min-width: 0; font-size: 15px; line-height: 1.4; }
+.meta b { color: var(--cream); font-weight: 700; }
+.meta .gone { text-decoration: line-through; opacity: 0.6; }
+@media (max-width: 600px) {
+  .meta { order: 3; flex-basis: 100%; font-size: 14px; }
+  .top-actions { margin-left: auto; }
+}
+
+/* Swapping a letter: it spins, then the new card glows yellow and fades */
+.hand .card.spinning {
+  box-shadow: 0 0 0 2px var(--focus), 0 0 14px rgba(77, 163, 255, 0.7);
+  animation: spin-pulse 0.2s ease-in-out infinite alternate;
+}
+.hand .card.spinning .letter { opacity: 0.85; }
+@keyframes spin-pulse {
+  from { transform: translateY(-6px) scale(1); }
+  to { transform: translateY(-6px) scale(1.06); }
+}
+.hand .card.glow { animation: glow-fade 0.5s ease-out both; }
+@keyframes glow-fade {
+  from { box-shadow: 0 0 0 3px #f5c542, 0 0 22px 8px rgba(245, 197, 66, 0.9); }
+  to { box-shadow: 0 0 0 0 rgba(245, 197, 66, 0), 0 8px 16px rgba(0, 0, 0, 0.18); }
+}
+
+/* Choosing the letter to swap: the hint and "Отмена" share one line, so the
+   row keeps the height of the other button rows and nothing below moves. */
+.builder .pick-note {
+  flex: 1 1 0;
+  flex-basis: 0;
+  min-width: 0;
+  text-align: left;
+  font-size: 14px;
+  line-height: 1.2;
+}
+.builder .pick-note + .btn { flex: 0 0 auto; }
