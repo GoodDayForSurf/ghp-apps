@@ -132,9 +132,16 @@ function playersLine() {
   const first = list.findIndex((p) => p.starter);
   const ordered = first > 0 ? list.slice(first).concat(list.slice(0, first)) : list;
   if (!ordered.length) return '';
+  // The admin is marked with a star. For the admin, the other players' names
+  // are buttons that throw that player out of the game.
+  const canKick = state.actions && state.actions.kick;
   const names = ordered.map((p) => {
-    const text = `${esc(p.name)} ${p.score}`;
+    const star = p.admin ? '<span class="admin-mark" title="Админ">★</span>' : '';
+    let text = `${esc(p.name)}${star} ${p.score}`;
     if (p.abandoned) return `<span class="gone">${text}</span>`;
+    if (canKick && !p.you) {
+      text = `<button type="button" class="kick" data-act="kick" data-id="${esc(p.id)}" data-name="${esc(p.name)}" title="Выкинуть из игры">${text}</button>`;
+    }
     return p.attacker || p.defender ? `<b>${text}</b>` : text;
   });
   return `Играют: ${names.join(', ')}`;
@@ -680,6 +687,9 @@ app.addEventListener('click', (event) => {
   } else if (act === 'swap-card') swapCard(target.dataset.id);
   else if (act === 'again') send({ type: 'again' });
   else if (act === 'next-round') send({ type: 'next-round' });
+  else if (act === 'kick') {
+    if (window.confirm(`Выкинуть из игры: ${target.dataset.name}?`)) send({ type: 'kick', playerId: target.dataset.id });
+  }
   else if (act === 'finish') {
     if (window.confirm('Закончить игру и подвести итог по очкам?')) send({ type: 'finish' });
   } else if (act === 'restart') {

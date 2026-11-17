@@ -417,7 +417,10 @@ const word = (table, who, letters) => {
   g.act(table, a.id, { type: 'accept' });
   assert.ok(score(table, b) > 0);
   const round = g.view(table, a.id).round;
-  g.act(table, b.id, { type: 'restart' });
+  // Only the admin, the first to join, starts a new game.
+  assert.strictEqual(g.view(table, b.id).actions.restart, false);
+  assert.throws(() => g.act(table, b.id, { type: 'restart' }), /только админ/);
+  g.act(table, a.id, { type: 'restart' });
 
   assert.strictEqual(table.phase, 'playing');
   assert.strictEqual(table.stage, 'attack');
@@ -538,6 +541,60 @@ const word = (table, who, letters) => {
   assert.strictEqual(table.turnId, b.id);
   assert.strictEqual(table.stage, 'attack');
   assert.strictEqual(g.view(table, a.id).players.find((p) => p.id === b.id).connected, false);
+}
+
+{
+  // The first player to join is the admin: only the admin deals, starts a new
+  // game or the next one, and throws players out.
+  const table = g.createTable();
+  const a = g.join(table, { name: 'Анна', language: 'ru' });
+  const b = g.join(table, { name: 'Борис' });
+  const c = g.join(table, { name: 'Вера' });
+  const view = (who) => g.view(table, who.id);
+  assert.strictEqual(view(a).you.admin, true);
+  assert.strictEqual(view(b).you.admin, false);
+  assert.deepStrictEqual(view(b).players.map((p) => p.admin), [true, false, false]);
+  assert.strictEqual(view(a).actions.start, true);
+  assert.strictEqual(view(b).actions.start, false);
+  assert.strictEqual(view(a).actions.kick, true);
+  assert.strictEqual(view(b).actions.kick, false);
+  assert.match(view(b).prompt, /Анна раздаст/);
+  assert.throws(() => g.act(table, b.id, { type: 'start' }), /только админ/);
+  g.act(table, a.id, { type: 'start' });
+
+  // Kicking: only the admin, never themselves, never someone not there.
+  assert.throws(() => g.act(table, b.id, { type: 'kick', playerId: c.id }), /только админ/);
+  assert.throws(() => g.act(table, a.id, { type: 'kick', playerId: a.id }), /Себя/);
+  assert.throws(() => g.act(table, a.id, { type: 'kick', playerId: 'nobody' }), /нет/);
+  // Борис is to move; thrown out, his turn passes and his session ends.
+  assert.strictEqual(table.turnId, b.id);
+  g.act(table, a.id, { type: 'kick', playerId: b.id });
+  assert.strictEqual(table.turnId, c.id);
+  assert.strictEqual(b.token, null);
+  assert.strictEqual(view(a).players.find((p) => p.id === b.id).abandoned, true);
+  assert.throws(() => g.act(table, a.id, { type: 'kick', playerId: b.id }), /нет/);
+
+  // When the admin leaves, the next player at the table takes over.
+  g.leave(table, a.id);
+  assert.strictEqual(table.phase, 'finished');
+  assert.strictEqual(view(c).you.admin, true);
+  assert.strictEqual(view(c).actions.again, true);
+  g.act(table, c.id, { type: 'again' });
+  assert.strictEqual(table.phase, 'waiting');
+}
+
+{
+  // Before the deal a kicked player simply leaves the table.
+  const table = g.createTable();
+  const a = g.join(table, { name: 'Анна', language: 'ru' });
+  const b = g.join(table, { name: 'Борис' });
+  g.act(table, a.id, { type: 'kick', playerId: b.id });
+  assert.deepStrictEqual(g.view(table, a.id).players.map((p) => p.name), ['Анна']);
+  assert.strictEqual(g.view(table, a.id).actions.start, false);
+  // Someone who joins later is not the admin.
+  const c = g.join(table, { name: 'Вера' });
+  assert.strictEqual(g.view(table, c.id).you.admin, false);
+  assert.strictEqual(g.view(table, a.id).actions.start, true);
 }
 
 console.log('ok');

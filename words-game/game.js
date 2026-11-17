@@ -63,6 +63,7 @@ function fresh() {
     deck: [],
     discard: 0,
     dealerId: null,
+    adminId: null,
     starterId: null,
     turnId: null,
     moved: [],
@@ -348,8 +349,27 @@ function join(game, { name, language, now }) {
     if (!game.dealerId) game.dealerId = person.id;
     log(game, `${person.name} садится за стол`);
   }
+  if (!game.adminId) game.adminId = person.id;
   touch(game);
   return person;
+}
+
+function isAdmin(game, playerId) {
+  return !!playerId && game.adminId === playerId;
+}
+
+function requireAdmin(game, playerId) {
+  if (!isAdmin(game, playerId)) throw new RuleError('Это может сделать только админ');
+}
+
+// Keeps an admin at the table: when the admin is gone, the first player who
+// is still there takes over.
+function checkAdmin(game) {
+  const admin = player(game, game.adminId);
+  if (admin && !admin.abandoned) return;
+  const next = game.players.find((p) => !p.abandoned && !p.queued) || game.players.find((p) => !p.abandoned);
+  game.adminId = next ? next.id : null;
+  if (next) log(game, `Админ теперь ${next.name}`);
 }
 
 function removePlayer(game, id) {
@@ -378,7 +398,20 @@ function leave(game, playerId) {
     removePlayer(game, playerId);
     if (!game.players.length) reset(game);
   }
+  if (game.players.length) checkAdmin(game);
   touch(game);
+}
+
+// The admin throws a player out: the player leaves the game as with "Leave",
+// and their session ends, so their page goes back to the join screen.
+function kick(game, adminId, targetId) {
+  requireAdmin(game, adminId);
+  if (targetId === adminId) throw new RuleError('Себя выкинуть нельзя: нажмите «Выйти»');
+  const target = player(game, targetId);
+  if (!target || target.abandoned) throw new RuleError('Такого игрока за столом нет');
+  log(game, `${player(game, adminId).name} выкидывает из игры: ${target.name}`);
+  target.token = null;
+  leave(game, targetId);
 }
 
 function collectCards(bout) {
@@ -668,6 +701,7 @@ function clearRound(game) {
 function again(game, playerId) {
   const p = player(game, playerId);
   if (!p) throw new RuleError('Вас нет за столом');
+  requireAdmin(game, playerId);
   if (game.phase !== 'finished') throw new RuleError('Партия ещё идёт');
   clearRound(game);
   log(game, 'Новая партия');
@@ -677,6 +711,7 @@ function again(game, playerId) {
 function restart(game, playerId) {
   const p = player(game, playerId);
   if (!isSeated(p)) throw new RuleError('Вы не за столом');
+  requireAdmin(game, playerId);
   if (game.phase === 'waiting') throw new RuleError('Партия ещё не началась');
   clearRound(game);
   if (seated(game).length >= 2) beginDeal(game);
@@ -692,9 +727,11 @@ function act(game, playerId, action) {
   const type = action && action.type;
   if (type === 'start') {
     if (p.queued) throw new RuleError('Вы ждёте следующую партию');
+    requireAdmin(game, playerId);
     beginDeal(game);
     return;
   }
+  if (type === 'kick') return kick(game, playerId, action.playerId);
   if (type === 'again') return again(game, playerId);
   if (type === 'restart') return restart(game, playerId);
   if (type === 'finish') return finish(game, playerId);
@@ -726,26 +763,31 @@ function actionsFor(game, p) {
     retract: false,
     again: false,
     restart: false,
+    kick: false,
     finish: false,
     nextRound: false,
     playable: [],
   };
   if (!p || p.abandoned) return actions;
-  actions.restart = !p.queued && game.phase !== 'waiting';
+  // Starting a game, a new one or the next one, and throwing players out are
+  // the admin's.
+  const admin = isAdmin(game, p.id);
+  actions.restart = admin && !p.queued && game.phase !== 'waiting';
+  actions.kick = admin;
   actions.finish = !p.queued && game.phase === 'playing';
   actions.nextRound = game.phase === 'playing' && game.stage === 'round-over'
     && isActive(p) && !game.ready.includes(p.id);
   if (p.queued) {
-    actions.again = game.phase === 'finished';
+    actions.again = admin && game.phase === 'finished';
     return actions;
   }
   if (game.phase === 'waiting') {
     const n = seated(game).length;
-    actions.start = n >= 2;
+    actions.start = admin && n >= 2;
     return actions;
   }
   if (game.phase === 'finished') {
-    actions.again = true;
+    actions.again = admin;
     return actions;
   }
   const mine = p.id === game.turnId;
@@ -769,7 +811,9 @@ function promptFor(game, p) {
   if (game.phase === 'waiting') {
     const n = seated(game).length;
     if (n < 2) return 'Ждём второго игрока. Откройте эту страницу на другом устройстве и нажмите Join.';
-    return 'Стол готов. Раздайте буквы.';
+    if (p && isAdmin(game, p.id)) return 'Стол готов. Раздайте буквы.';
+    const admin = player(game, game.adminId);
+    return admin ? `Ждём, когда ${admin.name} раздаст буквы.` : 'Стол готов.';
   }
   if (game.phase === 'finished') {
     const winner = player(game, game.winnerId);
@@ -818,6 +862,7 @@ function view(game, playerId) {
         id: you.id,
         name: you.name,
         score: you.score || 0,
+        admin: isAdmin(game, you.id),
         queued: you.queued,
         ...role(you.id),
         hand: sortHand(you.hand, game.language).map((card) => ({ id: card.id, letter: card.letter })),
@@ -830,6 +875,7 @@ function view(game, playerId) {
       ...role(p.id),
       moved: game.phase === 'playing' && game.moved.includes(p.id),
       starter: game.phase === 'playing' && p.id === game.starterId,
+      admin: isAdmin(game, p.id),
       ready: game.phase === 'playing' && game.stage === 'round-over' && game.ready.includes(p.id),
       connected: p.connected,
       abandoned: p.abandoned,

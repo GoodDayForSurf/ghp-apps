@@ -22,13 +22,15 @@ Restarting the process wipes the current game. The page, stylesheet, and client 
 
 Two to four players sit. Anyone who joins while a game is in progress, or while four seats are taken, waits for the next game.
 
-There are no timers. Once two players sit, **Deal** (Раздать) appears, and the letters are dealt only when someone presses it, also with four at the table.
+The first player to join is the admin, marked with a star (★) in the players line. There are no timers. Once two players sit, the admin sees **Deal** (Раздать), and the letters are dealt only when the admin presses it, also with four at the table. The others see who they are waiting for.
 
 Each player is dealt six random letters. There is no deck and no trump. The player to the dealer's left starts the first round. The dealer moves clockwise at the start of each new game.
 
 The game has no built-in end. Any seated player may press **Finish** (Закончить); the browser asks for confirmation first. The player with the most points wins, and equal top scores are a draw. A word that is still waiting to be accepted goes back to its owner and scores nothing. The game also ends when fewer than two players are left at the table.
 
-**New game** (Новая игра) in the header is available to any seated player once letters are dealt. It throws away the current game and its scores, seats whoever was waiting, and deals again at once. During a game the browser asks for confirmation first.
+**New game** (Новая игра) in the header is the admin's only, once letters are dealt; so is **One more game** (Ещё партию) after a game ends. It throws away the current game and its scores, seats whoever was waiting, and deals again at once. During a game the browser asks for confirmation first.
+
+The admin can also throw any other player out: for the admin, the other names in the players line are buttons, and a click asks for confirmation. A thrown-out player leaves as with **Leave** (Выйти), and their session ends, so their page goes back to the join screen. If the admin leaves, the next player at the table becomes the admin.
 
 Nobody's turn is taken over: a player who closed the page or lost the connection keeps their turn, and the others wait for them or press **Finish**. The server only marks a player who has not polled for 12 seconds as disconnected. A player who presses **Leave** (Выйти) during a game is out: their turns are skipped at once, nobody waits for their answer or their **New round**, and the game ends when fewer than two players are left.
 
@@ -94,7 +96,7 @@ The client stores its session token in `localStorage` under `slovoboy-token` and
 | POST | `/api/action` | `{ type, ... }` |
 | POST | `/api/leave` | Drop this seat |
 
-Action types are `start`, `again`, `restart`, `finish`, `propose`, `skip`, `next-round`, `accept`, `reject`, and `retract`. `propose` puts cards on the grid, on an empty table too, and sends `cells`, each `{ cardId, x, y }`, and `moved`, the new places of table cards it pushed aside, in the same shape; `y` grows downwards, and the first move of a round lies on `y = 0`, starting at `x = 0`, one empty cell between words. `skip` takes an optional `swap`, the id of the card to swap.
+Action types are `start`, `again`, `restart`, `finish`, `propose`, `skip`, `next-round`, `kick` (with `playerId`; admin only), `accept`, `reject`, and `retract`. `propose` puts cards on the grid, on an empty table too, and sends `cells`, each `{ cardId, x, y }`, and `moved`, the new places of table cards it pushed aside, in the same shape; `y` grows downwards, and the first move of a round lies on `y = 0`, starting at `x = 0`, one empty cell between words. `skip` takes an optional `swap`, the id of the card to swap.
 
 The cards the player is still laying stay in the browser until **End turn**. The server does not see a letter until that commit. Polls do not clear them.
 
