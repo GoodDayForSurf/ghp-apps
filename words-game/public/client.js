@@ -278,11 +278,12 @@ function boardHTML() {
     if (isPicked) cls.push('focus', `edge-${EDGES[chain.edge]}`);
     const act = live ? ` data-act="pick" data-id="${esc(cell.id)}"` : ' disabled';
     const card = `<button class="${cls.join(' ')}"${act}><span class="letter">${esc(cell.letter)}</span>${priceHTML(cell.letter)}</button>`;
-    // Your own new card: move it (swap places with the card next to it on
-    // that side, when there is one) or take it off.
+    // Your own new card: move it (swap places with your own new card next
+    // to it on that side, if there is one) or take it off.
     const moves = MOVES.map(([dir, label]) => {
       const [dx, dy] = DIRS[dir];
-      const there = map.has(keyOf(cell.x + dx, cell.y + dy));
+      const next = map.get(keyOf(cell.x + dx, cell.y + dy));
+      const there = !!(next && next.own);
       return `<button type="button" data-act="menu-move" data-dir="${dir}"${there ? '' : ' disabled'}>${label}</button>`;
     }).join('');
     const mini = isPicked && menu && menu.kind === 'cell'
@@ -596,14 +597,15 @@ function addToBuilder(card) {
 // and below). In the second case the parts close up: the left (upper) part
 // stays, the right (lower) part moves to it. Returns an error message, or ''.
 // Moves the focused own card one step: it swaps places with the card next to
-// it on that side, whoever laid that one. The card stays in focus.
+// it on that side, only if that one is also your own new card; other
+// players' cards never change places this way. The card stays in focus.
 function movePicked(dir) {
   const cells = boardCells();
   const target = cells.find((cell) => cell.id === selected);
   if (!target || !target.own) return;
   const [dx, dy] = DIRS[dir];
   const other = mapOf(cells).get(keyOf(target.x + dx, target.y + dy));
-  if (!other) return;
+  if (!other || !other.own) return;
   setPlace(target.id, other.x, other.y);
   setPlace(other.id, target.x, target.y);
   // A word that was growing from here starts again from the new place.

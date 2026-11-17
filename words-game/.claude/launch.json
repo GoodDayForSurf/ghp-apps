@@ -2,9 +2,9 @@
   "version": "0.0.1",
   "configurations": [
     {
-      "name": "slovoboy",
+      "name": "slovar",
       "runtimeExecutable": "node",
-      "runtimeArgs": ["server.js"],
+      "runtimeArgs": ["C:/_projects/ghp-apps/words-game/server.js"],
       "port": 3000
     }
   ]
