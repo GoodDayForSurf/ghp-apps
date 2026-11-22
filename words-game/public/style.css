@@ -890,3 +890,18 @@ html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
   text-underline-offset: 3px;
   cursor: pointer;
 }
+
+/* Two buttons in the round-over popup */
+.dialog .btn + .btn { margin-top: 8px; }
+
+/* Before the deal: the admin's choice of how many letters each hand gets */
+.hand-size {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+}
+.hand-size b { min-width: 1.5em; text-align: center; font-size: 1.2em; }
+.hand-size .step { width: 44px; min-width: 0; padding: 6px 0; flex: 0 0 auto; }
+.hand-size .step:disabled { opacity: 0.35; cursor: default; }

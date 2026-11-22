@@ -164,10 +164,11 @@ const word = (table, who, letters) => {
   assert.strictEqual(table.stage, 'round-over');
   g.act(table, c.id, { type: 'next-round' });
 
-  // All ready: table cleared, hands back to six, next player starts.
+  // All ready: table cleared, hands back to six, and the turn goes on round
+  // the table: Анна moved last, so Борис starts.
   assert.strictEqual(g.view(table, a.id).table.cells.length, 0);
   [a, b, c].forEach((p) => assert.strictEqual(hand(table, p).length, 6));
-  assert.strictEqual(table.turnId, c.id);
+  assert.strictEqual(table.turnId, b.id);
   assert.strictEqual(table.stage, 'attack');
   assert.deepStrictEqual(g.view(table, a.id).players.map((p) => p.moved), [false, false, false]);
   // Points stay for the whole game.
@@ -317,16 +318,16 @@ const word = (table, who, letters) => {
   assert.strictEqual(hand(table, c).map((card) => card.id).join(), kept);
 
   // Анна is the last one. Everyone skipped: the next round starts at once,
-  // with Вера.
+  // with the player after Анна: Борис.
   assert.strictEqual(table.turnId, a.id);
   g.act(table, a.id, { type: 'skip' });
   assert.notStrictEqual(table.stage, 'round-over');
-  assert.strictEqual(table.turnId, c.id);
+  assert.strictEqual(table.turnId, b.id);
   assert.strictEqual(table.stage, 'attack');
 
   // A word that already lies there waiting cannot be skipped.
-  g.act(table, c.id, { type: 'attack', cardId: hand(table, c)[0].id });
-  assert.throws(() => g.act(table, c.id, { type: 'skip' }), /только свой ход/);
+  g.act(table, b.id, { type: 'attack', cardId: hand(table, b)[0].id });
+  assert.throws(() => g.act(table, b.id, { type: 'skip' }), /только свой ход/);
 }
 
 {
@@ -343,7 +344,8 @@ const word = (table, who, letters) => {
 }
 
 {
-  // Two players: lay, build, new round started by the one who built.
+  // Two players: lay, build; the new round goes on round the table, so the
+  // one who built last does not move again at once.
   const { table, people: [a, b] } = seat(['Анна', 'Борис'], 'ru');
   g.debug.setHand(table, a.id, ['А', 'Й', 'С', 'П', 'У', 'Х']);
   g.debug.setHand(table, b.id, ['О', 'Н', 'Ф', 'Т', 'М', 'Д']);
@@ -359,7 +361,7 @@ const word = (table, who, letters) => {
   g.act(table, b.id, { type: 'accept' });
   assert.strictEqual(score(table, a), 1);
   nextRound(table, [a, b]);
-  assert.strictEqual(table.turnId, a.id);
+  assert.strictEqual(table.turnId, b.id);
   assert.strictEqual(table.stage, 'attack');
   assert.strictEqual(hand(table, a).length, 6);
   assert.strictEqual(hand(table, b).length, 6);
@@ -482,8 +484,8 @@ const word = (table, who, letters) => {
 }
 
 {
-  // Only one player laid words and that was the last turn of the round: the
-  // next round starts at once, with no "New round" to press.
+  // Cards on the table: the popup always waits, so the admin can continue.
+  // Only one player laid words and that was the last turn of the round.
   const { table, people: [a, b, c] } = seat(['Анна', 'Борис', 'Вера'], 'ru');
   const lay = (who) => {
     const h = hand(table, who);
@@ -494,28 +496,31 @@ const word = (table, who, letters) => {
   g.act(table, c.id, { type: 'skip' });
   lay(a);
   g.act(table, b.id, { type: 'accept' });
+  assert.strictEqual(table.stage, 'round-over');
+  assert.ok(score(table, a) > 0);
+  nextRound(table, [a, b, c]);
   assert.strictEqual(table.stage, 'attack');
-  assert.strictEqual(table.turnId, c.id);
+  // Анна moved last, so Борис starts: turns go strictly round the table.
+  assert.strictEqual(table.turnId, b.id);
   assert.strictEqual(g.view(table, a.id).table.cells.length, 0);
   [a, b, c].forEach((p) => assert.strictEqual(hand(table, p).length, 6));
-  assert.ok(score(table, a) > 0);
 
   // One player laid words, but the last turn was a skip: the popup waits.
-  lay(c);
-  g.act(table, a.id, { type: 'accept' });
+  lay(b);
+  g.act(table, c.id, { type: 'accept' });
+  g.act(table, c.id, { type: 'skip' });
   g.act(table, a.id, { type: 'skip' });
-  g.act(table, b.id, { type: 'skip' });
   assert.strictEqual(table.stage, 'round-over');
   nextRound(table, [a, b, c]);
 
   // Two players laid words, the last one included: the popup waits too.
-  assert.strictEqual(table.turnId, a.id);
-  lay(a);
+  assert.strictEqual(table.turnId, b.id);
+  lay(b);
+  g.act(table, c.id, { type: 'accept' });
+  g.act(table, c.id, { type: 'skip' });
+  const h = hand(table, a);
+  g.act(table, a.id, { type: 'propose', cells: [{ cardId: h[0].id, x: 0, y: 1 }] });
   g.act(table, b.id, { type: 'accept' });
-  g.act(table, b.id, { type: 'skip' });
-  const h = hand(table, c);
-  g.act(table, c.id, { type: 'propose', cells: [{ cardId: h[0].id, x: 0, y: 1 }] });
-  g.act(table, a.id, { type: 'accept' });
   assert.strictEqual(table.stage, 'round-over');
 
   // A move that was rejected and then skipped does not count as laid: with
@@ -528,7 +533,7 @@ const word = (table, who, letters) => {
   g.act(table, c.id, { type: 'skip' });
   g.act(table, a.id, { type: 'skip' });
   assert.strictEqual(table.stage, 'attack');
-  assert.strictEqual(table.turnId, c.id);
+  assert.strictEqual(table.turnId, b.id);
 }
 
 {
@@ -595,6 +600,192 @@ const word = (table, who, letters) => {
   const c = g.join(table, { name: 'Вера' });
   assert.strictEqual(g.view(table, c.id).you.admin, false);
   assert.strictEqual(g.view(table, a.id).actions.start, true);
+}
+
+{
+  // When a round is over, the admin may continue it: the table stays, every
+  // hand is topped up, and the next player starts a round on the same table.
+  const { table, people: [a, b, c] } = seat(['Анна', 'Борис', 'Вера'], 'ru');
+  const view = (who) => g.view(table, who.id);
+  const h = hand(table, b);
+  g.act(table, b.id, { type: 'propose', cells: [{ cardId: h[0].id, x: 0, y: 0 }, { cardId: h[1].id, x: 1, y: 0 }] });
+  g.act(table, a.id, { type: 'accept' });
+  g.act(table, c.id, { type: 'skip' });
+  g.act(table, a.id, { type: 'skip' });
+  assert.strictEqual(table.stage, 'round-over');
+  assert.strictEqual(view(a).actions.continueRound, true);
+  assert.strictEqual(view(b).actions.continueRound, false);
+  assert.throws(() => g.act(table, b.id, { type: 'continue-round' }), /только админ/);
+  const before = view(a).table.cells.map((cell) => cell.id).join();
+  const score = view(b).you.score;
+
+  g.act(table, a.id, { type: 'continue-round' });
+  // No "New round" from the others; the same cards lie where they were.
+  assert.strictEqual(table.stage, 'defend');
+  assert.strictEqual(view(a).table.cells.map((cell) => cell.id).join(), before);
+  [a, b, c].forEach((p) => assert.strictEqual(hand(table, p).length, 6));
+  assert.strictEqual(view(b).you.score, score);
+  // Анна moved last, so Борис starts this one, building on the same cards.
+  assert.strictEqual(table.turnId, b.id);
+  assert.deepStrictEqual(view(a).players.map((p) => p.moved), [false, false, false]);
+  const v = hand(table, b);
+  g.act(table, b.id, { type: 'propose', cells: [{ cardId: v[0].id, x: 0, y: 1 }] });
+  g.act(table, c.id, { type: 'accept' });
+  assert.strictEqual(view(a).table.cells.length, 3);
+  assert.throws(() => g.act(table, a.id, { type: 'continue-round' }), /Раунд ещё идёт/);
+  // Everyone skips the rest: the cards are still there, so the popup waits.
+  g.act(table, c.id, { type: 'skip' });
+  g.act(table, a.id, { type: 'skip' });
+  assert.strictEqual(table.stage, 'round-over');
+  g.act(table, a.id, { type: 'continue-round' });
+  assert.strictEqual(view(a).table.cells.length, 3);
+  [a, b, c].forEach((p) => g.act(table, table.turnId, { type: 'skip' }));
+  assert.strictEqual(table.stage, 'round-over');
+}
+
+{
+  // Before the deal the admin sets how many letters each hand gets.
+  const table = g.createTable();
+  const a = g.join(table, { name: 'Анна', language: 'ru' });
+  const b = g.join(table, { name: 'Борис' });
+  const view = (who) => g.view(table, who.id);
+  assert.strictEqual(view(b).handSize, 6);
+  assert.strictEqual(view(a).actions.handSize, true);
+  assert.strictEqual(view(b).actions.handSize, false);
+  assert.throws(() => g.act(table, b.id, { type: 'hand-size', size: 8 }), /только админ/);
+  assert.throws(() => g.act(table, a.id, { type: 'hand-size', size: g.HAND_MAX + 1 }), /от/);
+  assert.throws(() => g.act(table, a.id, { type: 'hand-size', size: g.HAND_MIN - 1 }), /от/);
+  g.act(table, a.id, { type: 'hand-size', size: 9 });
+  assert.strictEqual(view(b).handSize, 9);
+  g.act(table, a.id, { type: 'start' });
+  [a, b].forEach((p) => assert.strictEqual(hand(table, p).length, 9));
+  assert.strictEqual(view(a).actions.handSize, false);
+  assert.throws(() => g.act(table, a.id, { type: 'hand-size', size: 4 }), /до раздачи/);
+  // Top-ups after a move use it too.
+  const h = hand(table, b);
+  g.act(table, b.id, { type: 'propose', cells: [{ cardId: h[0].id, x: 0, y: 0 }, { cardId: h[1].id, x: 1, y: 0 }] });
+  g.act(table, a.id, { type: 'accept' });
+  g.act(table, a.id, { type: 'skip' });
+  g.act(table, a.id, { type: 'next-round' });
+  g.act(table, b.id, { type: 'next-round' });
+  [a, b].forEach((p) => assert.strictEqual(hand(table, p).length, 9));
+  // "New game" keeps the choice.
+  g.act(table, a.id, { type: 'restart' });
+  [a, b].forEach((p) => assert.strictEqual(hand(table, p).length, 9));
+}
+
+{
+  // Letters come out of a bag with a fixed number of each: a letter that is
+  // out never comes out more often than the bag holds it.
+  const full = Object.values(g.BAG.ru).reduce((x, y) => x + y, 0);
+  for (let round = 0; round < 50; round += 1) {
+    const table = g.createTable();
+    const people = ['Анна', 'Борис', 'Вера', 'Глеб'].map((name, i) => g.join(table, { name, language: i ? undefined : 'ru' }));
+    g.act(table, people[0].id, { type: 'hand-size', size: 12 });
+    g.act(table, people[0].id, { type: 'start' });
+    const counts = {};
+    people.forEach((p) => hand(table, p).forEach((card) => { counts[card.letter] = (counts[card.letter] || 0) + 1; }));
+    Object.keys(counts).forEach((letter) => assert.ok(counts[letter] <= g.BAG.ru[letter], letter));
+    const left = g.bagLeft(table);
+    assert.strictEqual(Object.values(left).reduce((x, y) => x + y, 0), full - 48);
+    Object.keys(left).forEach((letter) => assert.strictEqual(left[letter] + (counts[letter] || 0), g.BAG.ru[letter]));
+  }
+
+  // The table takes letters out of the bag; clearing it puts them back.
+  const { table, people: [a, b] } = seat(['Анна', 'Борис'], 'ru');
+  const total = () => Object.values(g.bagLeft(table)).reduce((x, y) => x + y, 0);
+  assert.strictEqual(total(), full - 12);
+  const h = hand(table, b);
+  g.act(table, b.id, { type: 'propose', cells: [{ cardId: h[0].id, x: 0, y: 0 }, { cardId: h[1].id, x: 1, y: 0 }] });
+  assert.strictEqual(total(), full - 12);
+  g.act(table, a.id, { type: 'accept' });
+  g.act(table, a.id, { type: 'skip' });
+  assert.strictEqual(table.stage, 'round-over');
+  assert.strictEqual(g.view(table, a.id).table.cells.length, 2);
+  assert.strictEqual(total(), full - 12);
+  nextRound(table, [a, b]);
+  assert.strictEqual(g.view(table, a.id).table.cells.length, 0);
+  assert.strictEqual(total(), full - 12);
+
+  // A swap puts the old letter back and draws another: the only Ъ in the
+  // bag, once swapped away, can come back out again.
+  g.debug.setHand(table, table.turnId, ['Ъ', 'А', 'А', 'А', 'А', 'А']);
+  const mover = table.turnId;
+  g.act(table, mover, { type: 'skip', swap: hand(table, { id: mover })[0].id });
+  assert.strictEqual(g.bagLeft(table)['Ъ'] + hand(table, { id: mover }).filter((c) => c.letter === 'Ъ').length, 1);
+}
+
+{
+  // The bag never runs empty: with most of a set out, another set is poured
+  // in, and swaps and top-ups still work.
+  const { table, people: [a, b] } = seat(['Анна', 'Борис'], 'ru');
+  const sum = () => Object.values(g.bagLeft(table)).reduce((x, y) => x + y, 0);
+  const full = Object.values(g.BAG.ru).reduce((x, y) => x + y, 0);
+  const rest = [];
+  Object.entries(g.bagLeft(table)).forEach(([letter, n]) => { for (let i = 0; i < n; i += 1) rest.push(letter); });
+  g.debug.setHand(table, a.id, hand(table, a).map((c) => c.letter).concat(rest));
+  assert.ok(sum() >= full / 2);
+  // All the О of the first set are out, but more come with the second.
+  assert.ok(g.bagLeft(table)['О'] > 0);
+  const h = hand(table, b);
+  g.act(table, b.id, { type: 'skip', swap: h[0].id });
+  assert.strictEqual(hand(table, b).length, 6);
+  g.act(table, a.id, { type: 'skip' });
+  assert.strictEqual(hand(table, b).length, 6);
+}
+
+{
+  // Russian has no Ё card: Е stands for both, at Е's price, as common as both.
+  assert.ok(!('Ё' in g.BAG.ru));
+  assert.strictEqual(g.BAG.ru['Е'], 9);
+  const { table, people: [a] } = seat(['Анна', 'Борис'], 'ru');
+  assert.ok(!g.view(table, a.id).alphabet.includes('Ё'));
+  assert.strictEqual(g.view(table, a.id).prices['Е'], 1);
+  assert.ok(!('Ё' in g.view(table, a.id).prices));
+}
+
+{
+  // Turns go strictly round the table, across rounds too: whatever happens
+  // (moves, skips, new rounds, continuing on the same table), nobody gets two
+  // turns in a row, except after their own move was rejected or taken back.
+  [2, 3, 4].forEach((n) => {
+    for (let game = 0; game < 30; game += 1) {
+      const { table, people } = seat(['Анна', 'Борис', 'Вера', 'Глеб'].slice(0, n), 'ru');
+      const turns = [table.turnId];
+      let turnNo = table.turnNo;
+      let again = false;
+      for (let step = 0; step < 120; step += 1) {
+        const r = Math.random();
+        const mover = people.find((p) => p.id === table.turnId);
+        if (table.stage === 'round-over') {
+          if (r < 0.4) g.act(table, people[0].id, { type: 'continue-round' });
+          else nextRound(table, people);
+        } else if (table.stage === 'confirm' || table.stage === 'confirm-attack') {
+          const judge = people.find((p) => p.id !== mover.id);
+          if (r < 0.8) g.act(table, judge.id, { type: 'accept' });
+          else { g.act(table, judge.id, { type: 'reject' }); again = true; }
+        } else if (r < 0.4) {
+          g.act(table, mover.id, { type: 'skip' });
+        } else {
+          const cells = g.view(table, mover.id).table.cells;
+          const taken = new Set(cells.map((c) => c.x + ',' + c.y));
+          let spot = { x: 0, y: 0 };
+          cells.some((c) => [[1, 0], [0, 1], [-1, 0], [0, -1]].some(([dx, dy]) => {
+            if (taken.has((c.x + dx) + ',' + (c.y + dy))) return false;
+            spot = { x: c.x + dx, y: c.y + dy };
+            return true;
+          }));
+          g.act(table, mover.id, { type: 'propose', cells: [{ cardId: hand(table, mover)[0].id, ...spot }] });
+        }
+        if (table.turnId && table.turnNo !== turnNo) {
+          if (!again) assert.notStrictEqual(table.turnId, turns[turns.length - 1], `${n} players`);
+          turns.push(table.turnId);
+          turnNo = table.turnNo;
+          again = false;
+        }
+      }
+    }
+  });
 }
 
 console.log('ok');

@@ -24,7 +24,7 @@ Two to four players sit. Anyone who joins while a game is in progress, or while 
 
 The first player to join is the admin, marked with a star (★) in the players line. There are no timers. Once two players sit, the admin sees **Deal** (Раздать), and the letters are dealt only when the admin presses it, also with four at the table. The others see who they are waiting for.
 
-Each player is dealt six random letters. There is no deck and no trump. The player to the dealer's left starts the first round. The dealer moves clockwise at the start of each new game.
+Each player is dealt six random letters by default. Before the deal the admin sets how many, from 3 to 12, with − and + next to **Deal**; the others see the number. Every top-up during that game fills hands to the same number, and **New game** keeps it. "Six" below means this number. There is no deck and no trump. The player to the dealer's left starts the first round. The dealer moves clockwise at the start of each new game.
 
 The game has no built-in end. Any seated player may press **Finish** (Закончить); the browser asks for confirmation first. The player with the most points wins, and equal top scores are a draw. A word that is still waiting to be accepted goes back to its owner and scores nothing. The game also ends when fewer than two players are left at the table.
 
@@ -42,15 +42,15 @@ Every letter has a price, the same as its Scrabble tile: the rarer the letter, t
 | --- | --- | --- |
 | 1 | А, В, Е, И, Н, О, Р, С, Т | A, E, O, I, S, N, L, R, U, T |
 | 2 | Д, К, Л, М, П, У | D, G |
-| 3 | Б, Г, Ё, Ь, Я | C, B, M, P |
+| 3 | Б, Г, Ь, Я | C, B, M, P |
 | 4 | Й, Ы | H, F, V, Y |
 | 5 | Ж, З, Х, Ц, Ч | Q |
 | 8 | Ш, Э, Ю | J, Ñ, X |
 | 10 | Ф, Щ, Ъ | Z, K, W |
 
-Spanish Scrabble has no K or W tiles; here they get the top price. Ё is not Е, and Ñ is not N. Accented vowels and Ü are not cards. CH, LL, and RR are two cards each.
+Spanish Scrabble has no K or W tiles; here they get the top price. There is no Ё card: Е stands for both Е and Ё, costs 1 and is as common as the two together. Ñ is not N. Accented vowels and Ü are not cards. CH, LL, and RR are two cards each.
 
-Letters are dealt at random, one at a time. The cheaper a letter, the more likely it is: its weight is 1 divided by its price, so a 1-point letter comes ten times as often as a 10-point one.
+Letters are drawn blind out of a bag, one at a time, as in Scrabble. The bag holds a fixed number of each letter, taken from Scrabble sets, where the counts follow how often a letter occurs in the language's words: the Russian bag has 102 letters (ten О, nine Е, eight А, one each of Ф, Щ, Ъ and the other rare ones), the Spanish one 97 (with one K and one W added). So cheap, common letters come out often, and a letter that is already out is less likely to come out again: if the only Ъ is in someone's hand or on the table, nobody else can draw it. Letters go back into the bag when the table is cleared at the end of a round, when a player swaps a letter away, and when a player leaves the game. The bag never runs empty: whenever fewer than half a set would be left in it, another full set is poured in, so the proportions stay the same however many letters are out.
 
 A player's score is the sum of the prices of the cards that player used. Cards count at the moment the other players accept the word. A word that is rejected or taken back scores nothing, because the cards return to the hand. Points add up through the whole game. The header line **Играют:** lists every player with their points, in the order they move this round, starting with the player who began it; the player whose move it is is in bold. The number of cards in a hand is not shown.
 
@@ -62,9 +62,9 @@ Every move is laid card by card straight onto the table, the first move of a rou
 
 The table is a grid, like a crossword. Players put their cards into empty cells next to the cards already there, so a new word may start from any card on the table, across or down, whoever laid it. Within one move a player may also build on their own new cards: for example a word down from a letter of the first word, then a word across from a letter of that new word. To fit a card in between, a move may push cards of the table aside; the other players see the table as it would be after the move. Every new card must touch the table, directly or through other new cards of the same move, and at least one card must be added. A move may make several words at once, including words formed where a new card happens to stand next to old ones; the other players see all of them and accept or reject the move as a whole.
 
-Instead of moving, a player may press **Skip turn** (Пропустить ход) and then choose: **Skip** (Пропустить), or **Swap a letter** (Заменить букву) and tap one card in the hand. That card is replaced by a random letter, never the same letter again; the rest of the hand stays. A whole hand cannot be swapped. Cards already laid on the table in this move go back to the hand. If the first player skips, the table is still empty and the next player lays the first words.
+Instead of moving, a player may press **Skip turn** (Пропустить ход) and then choose: **Skip** (Пропустить), or **Swap a letter** (Заменить букву) and tap one card in the hand. That card goes back into the bag and another letter is drawn instead, never the same letter again; the rest of the hand stays. A whole hand cannot be swapped. Cards already laid on the table in this move go back to the hand. If the first player skips, the table is still empty and the next player lays the first words.
 
-When every player has moved or skipped, the round ends. The next round starts at once when there is nothing to look at: everyone skipped, or only one player laid words this round and that was the last turn, so the others have just accepted them. A move that was rejected or taken back does not count as laid. Otherwise the next one does not start by itself. A popup shows the scores and a **New round** (Новый раунд) button, and the table stays in view under it. Every player has to press the button; the popup shows who is ready. A player who has left is not waited for. Then all letters are cleared from the table, every hand is topped up to six with random letters, and a new round begins. It is started by the next player in order after the one who started the previous round.
+When every player has moved or skipped, the round ends. If the table is empty (everyone skipped on an empty table), the next round starts at once. When there are cards on the table, the next one never starts by itself, so the admin can always choose to continue on them. A popup shows the scores and a **New round** (Новый раунд) button, and the table stays in view under it. Every player has to press the button; the popup shows who is ready. A player who has left is not waited for. The admin also sees **Continue on this table** (Продолжить на этом столе) in the popup: pressed, it skips the waiting and keeps the table as it is; every hand is topped up to six, and a new round begins that builds on the same cards. Otherwise, once everyone is ready, all letters are cleared from the table, every hand is topped up to six with random letters, and a new round begins. Turns go strictly round the table, across rounds too: a new round is started by the player after the one who moved last, so nobody moves twice in a row. The only exception is a move the others rejected or its owner took back: then the same player moves again or skips.
 
 ## How to lay cards
 
@@ -96,7 +96,7 @@ The client stores its session token in `localStorage` under `slovoboy-token` and
 | POST | `/api/action` | `{ type, ... }` |
 | POST | `/api/leave` | Drop this seat |
 
-Action types are `start`, `again`, `restart`, `finish`, `propose`, `skip`, `next-round`, `kick` (with `playerId`; admin only), `accept`, `reject`, and `retract`. `propose` puts cards on the grid, on an empty table too, and sends `cells`, each `{ cardId, x, y }`, and `moved`, the new places of table cards it pushed aside, in the same shape; `y` grows downwards, and the first move of a round lies on `y = 0`, starting at `x = 0`, one empty cell between words. `skip` takes an optional `swap`, the id of the card to swap.
+Action types are `start`, `again`, `restart`, `finish`, `propose`, `skip`, `next-round`, `kick` (with `playerId`; admin only), `continue-round` (admin only), `hand-size` (with `size`; admin only, before the deal), `accept`, `reject`, and `retract`. `propose` puts cards on the grid, on an empty table too, and sends `cells`, each `{ cardId, x, y }`, and `moved`, the new places of table cards it pushed aside, in the same shape; `y` grows downwards, and the first move of a round lies on `y = 0`, starting at `x = 0`, one empty cell between words. `skip` takes an optional `swap`, the id of the card to swap.
 
 The cards the player is still laying stay in the browser until **End turn**. The server does not see a letter until that commit. Polls do not clear them.
 

@@ -1,7 +1,7 @@
 'use strict';
 
 const ALPH = {
-  ru: 'АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ'.split(''),
+  ru: 'АБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ'.split(''),
   es: 'ABCDEFGHIJKLMNÑOPQRSTUVWXYZ'.split(''),
 };
 
@@ -11,7 +11,7 @@ const PRICE_GROUPS = {
   ru: {
     1: 'АВЕИНОРСТ',
     2: 'ДКЛМПУ',
-    3: 'БГЁЬЯ',
+    3: 'БГЬЯ',
     4: 'ЙЫ',
     5: 'ЖЗХЦЧ',
     8: 'ШЭЮ',
@@ -28,6 +28,23 @@ const PRICE_GROUPS = {
   },
 };
 
+// The bag: how many of each letter it holds, as in Scrabble sets, where the
+// counts follow how often a letter occurs in the language's words. Spanish
+// Scrabble has no K or W tiles and has CH, LL, RR instead; here K and W get
+// one tile each.
+const BAG = {
+  ru: {
+    А: 8, Б: 2, В: 4, Г: 2, Д: 4, Е: 9, Ж: 1, З: 2, И: 5, Й: 1,
+    К: 4, Л: 4, М: 3, Н: 5, О: 10, П: 4, Р: 5, С: 5, Т: 5, У: 4, Ф: 1,
+    Х: 1, Ц: 1, Ч: 1, Ш: 1, Щ: 1, Ъ: 1, Ы: 2, Ь: 2, Э: 1, Ю: 1, Я: 2,
+  },
+  es: {
+    A: 12, B: 2, C: 4, D: 5, E: 12, F: 1, G: 2, H: 2, I: 6, J: 1, K: 1,
+    L: 4, M: 2, N: 5, Ñ: 1, O: 9, P: 2, Q: 1, R: 5, S: 6, T: 4, U: 5,
+    V: 1, W: 1, X: 1, Y: 1, Z: 1,
+  },
+};
+
 const PRICES = {};
 Object.keys(PRICE_GROUPS).forEach((language) => {
   PRICES[language] = {};
@@ -38,7 +55,11 @@ Object.keys(PRICE_GROUPS).forEach((language) => {
   });
 });
 
+// How many letters every hand is topped up to. The admin picks it before the
+// deal, from HAND_MIN to HAND_MAX; HAND is the default.
 const HAND = 6;
+const HAND_MIN = 3;
+const HAND_MAX = 12;
 const MAX_SEATS = 4;
 const DISCONNECT_MS = 12000;
 
@@ -58,6 +79,7 @@ function uid(prefix) {
 function fresh() {
   return {
     language: null,
+    handSize: HAND,
     phase: 'waiting',
     players: [],
     deck: [],
@@ -65,6 +87,7 @@ function fresh() {
     dealerId: null,
     adminId: null,
     starterId: null,
+    lastId: null,
     turnId: null,
     moved: [],
     played: [],
@@ -187,31 +210,67 @@ function setStage(game, stage) {
   game.turnAt = Date.now();
 }
 
-// A random letter: the cheaper the letter, the more likely it is.
-// The weight of a letter is 1 / price.
-function randomLetter(language, except) {
-  const prices = PRICES[language];
-  if (!prices) throw new RuleError('Неизвестный набор букв');
-  const letters = ALPH[language].filter((letter) => letter !== except);
-  const total = letters.reduce((sum, letter) => sum + 1 / prices[letter], 0);
+// What is left in the bag: the full set minus every letter that is out of it,
+// in the hands of the players still in the game and on the table (with a move
+// waiting for the others' answer). Letters cleared from the table, swapped
+// away or held by a player who left are back in the bag.
+//
+// The bag never runs empty: whenever fewer than half a set would be left in
+// it, another full set is poured in. So letters keep their proportions, and
+// a letter that is out is still less likely to come out again.
+function bagLeft(game) {
+  const set = BAG[game.language] || BAG.ru;
+  const full = Object.values(set).reduce((sum, n) => sum + n, 0);
+  const out = [];
+  game.players.forEach((p) => {
+    if (!p.abandoned) out.push(...p.hand);
+  });
+  if (game.bout) {
+    game.bout.cells.forEach((cell) => out.push(cell.card));
+    if (game.bout.pending) game.bout.pending.cells.forEach((cell) => out.push(cell.card));
+  }
+  const sets = Math.max(1, Math.ceil((out.length + full / 2) / full));
+  const left = {};
+  Object.keys(set).forEach((letter) => { left[letter] = set[letter] * sets; });
+  out.forEach((card) => {
+    if (left[card.letter] > 0) left[card.letter] -= 1;
+  });
+  return left;
+}
+
+// A random letter out of the bag, as if drawn blind: each letter is as likely
+// as the share of the bag it makes up. `except` is never drawn. Returns null
+// when the bag has nothing to give.
+function drawLetter(game, except) {
+  const left = bagLeft(game);
+  const letters = Object.keys(left).filter((letter) => letter !== except && left[letter] > 0);
+  const total = letters.reduce((sum, letter) => sum + left[letter], 0);
+  if (!total) return null;
   let roll = Math.random() * total;
   for (let i = 0; i < letters.length; i += 1) {
-    roll -= 1 / prices[letters[i]];
+    roll -= left[letters[i]];
     if (roll < 0) return letters[i];
   }
   return letters[letters.length - 1];
 }
 
 // game.deck is normally empty; tests queue letters there to fix the deal.
+// An empty bag gives nothing: the hand stays short until letters come back.
 function drawOne(game, p) {
-  const card = game.deck.length
-    ? game.deck.pop()
-    : { id: uid('c'), letter: randomLetter(game.language) };
-  p.hand.push(card);
+  if (game.deck.length) {
+    p.hand.push(game.deck.pop());
+    return true;
+  }
+  const letter = drawLetter(game);
+  if (!letter) return false;
+  p.hand.push({ id: uid('c'), letter });
+  return true;
 }
 
 function topUp(game, p) {
-  while (p.hand.length < HAND) drawOne(game, p);
+  while (p.hand.length < (game.handSize || HAND)) {
+    if (!drawOne(game, p)) break;
+  }
 }
 
 // ---------------------------------------------------------------- rounds --
@@ -227,12 +286,14 @@ function setTurn(game, id) {
   touch(game);
 }
 
-function startRound(game, starterId) {
+// `keepTable`: the cards on the table stay and the new round goes on
+// building on them.
+function startRound(game, starterId, keepTable) {
   game.starterId = starterId;
   game.moved = [];
   game.played = [];
   game.ready = [];
-  game.bout = emptyBout();
+  if (!keepTable || !game.bout) game.bout = emptyBout();
   setTurn(game, starterId);
 }
 
@@ -246,23 +307,30 @@ function endRound(game) {
     if (isActive(p)) topUp(game, p);
   });
   if (endIfNeeded(game)) return;
-  const starter = nextActiveId(game, game.starterId) || game.players.find(isActive).id;
+  const starter = nextStarter(game);
   log(game, 'Новый раунд');
   startRound(game, starter);
+}
+
+// Turns go strictly round the table, across rounds too: a new round starts
+// with the player after the one who moved last, so nobody moves twice in a
+// row.
+function nextStarter(game) {
+  return nextActiveId(game, game.lastId || game.starterId) || game.players.find(isActive).id;
 }
 
 // The player whose turn it was is done for this round.
 // `played`: the turn ended with words the others accepted, not a skip.
 function endTurn(game, played) {
+  game.lastId = game.turnId;
   if (!game.moved.includes(game.turnId)) game.moved.push(game.turnId);
   if (played && !game.played.includes(game.turnId)) game.played.push(game.turnId);
   if (endIfNeeded(game)) return;
   const next = nextId(game, game.turnId, (p) => isActive(p) && !game.moved.includes(p.id));
   if (next) setTurn(game, next);
-  // The next round starts at once when there is nothing to look at: everyone
-  // skipped, or only one player laid words and that was the last turn, so the
-  // others have just accepted them.
-  else if (!game.played.length || (played && game.played.length === 1)) endRound(game);
+  // The next round starts at once only when the table is empty. With cards on
+  // the table the admin always gets the choice to continue on it.
+  else if (!game.bout || !game.bout.cells.length) endRound(game);
   else roundOver(game);
 }
 
@@ -278,6 +346,22 @@ function roundOver(game) {
 
 function everyoneReady(game) {
   return game.players.filter(isActive).every((p) => game.ready.includes(p.id));
+}
+
+// The admin's other choice when a round is over: the table stays as it is,
+// every hand is topped up to six, and the next player in order starts a new
+// round on the same table. Nobody else has to confirm.
+function continueRound(game, playerId) {
+  if (game.phase !== 'playing' || game.stage !== 'round-over') throw new RuleError('Раунд ещё идёт');
+  requireAdmin(game, playerId);
+  game.players.forEach((p) => {
+    if (isActive(p)) topUp(game, p);
+  });
+  if (endIfNeeded(game)) return;
+  const starter = nextStarter(game);
+  log(game, `${player(game, playerId).name} продолжает раунд на том же столе`);
+  startRound(game, starter, true);
+  touch(game);
 }
 
 function nextRound(game, playerId) {
@@ -662,10 +746,16 @@ function skip(game, playerId, action) {
     const index = p.hand.findIndex((card) => card.id === swapId);
     if (index < 0) throw new RuleError('Такой карты нет в руке');
     const old = p.hand[index];
+    // The old letter goes back into the bag, and another one comes out.
     // Tests may queue the next letter in game.deck.
     const queued = game.deck.length ? game.deck.pop() : null;
-    const letter = queued && queued.letter !== old.letter ? queued.letter : randomLetter(game.language, old.letter);
-    p.hand[index] = { id: uid('c'), letter };
+    p.hand.splice(index, 1);
+    const letter = queued && queued.letter !== old.letter ? queued.letter : drawLetter(game, old.letter);
+    if (!letter) {
+      p.hand.splice(index, 0, old);
+      throw new RuleError('В мешке нет других букв');
+    }
+    p.hand.splice(index, 0, { id: uid('c'), letter });
     log(game, `${p.name} пропускает ход и меняет одну букву`);
   } else {
     log(game, `${p.name} пропускает ход`);
@@ -686,6 +776,7 @@ function clearRound(game) {
   game.discard = 0;
   game.turnId = null;
   game.starterId = null;
+  game.lastId = null;
   game.moved = [];
   game.played = [];
   game.ready = [];
@@ -696,6 +787,18 @@ function clearRound(game) {
   const previous = game.dealerId;
   const nextDealer = previous ? nextId(game, previous, (item) => !item.queued) : null;
   game.dealerId = nextDealer || (game.players[0] && game.players[0].id) || null;
+}
+
+// The admin sets the hand size while the table waits for the deal.
+function setHandSize(game, playerId, size) {
+  requireAdmin(game, playerId);
+  if (game.phase !== 'waiting') throw new RuleError('Количество букв меняется до раздачи');
+  const n = Number(size);
+  if (!Number.isInteger(n) || n < HAND_MIN || n > HAND_MAX) {
+    throw new RuleError(`Букв может быть от ${HAND_MIN} до ${HAND_MAX}`);
+  }
+  game.handSize = n;
+  touch(game);
 }
 
 function again(game, playerId) {
@@ -732,6 +835,7 @@ function act(game, playerId, action) {
     return;
   }
   if (type === 'kick') return kick(game, playerId, action.playerId);
+  if (type === 'hand-size') return setHandSize(game, playerId, action.size);
   if (type === 'again') return again(game, playerId);
   if (type === 'restart') return restart(game, playerId);
   if (type === 'finish') return finish(game, playerId);
@@ -739,6 +843,7 @@ function act(game, playerId, action) {
   if (type === 'propose') return propose(game, playerId, action);
   if (type === 'skip') return skip(game, playerId, action);
   if (type === 'next-round') return nextRound(game, playerId);
+  if (type === 'continue-round') return continueRound(game, playerId);
   if (type === 'accept') return accept(game, playerId);
   if (type === 'reject') return reject(game, playerId);
   if (type === 'retract') return retract(game, playerId);
@@ -766,6 +871,8 @@ function actionsFor(game, p) {
     kick: false,
     finish: false,
     nextRound: false,
+    continueRound: false,
+    handSize: false,
     playable: [],
   };
   if (!p || p.abandoned) return actions;
@@ -775,6 +882,7 @@ function actionsFor(game, p) {
   actions.restart = admin && !p.queued && game.phase !== 'waiting';
   actions.kick = admin;
   actions.finish = !p.queued && game.phase === 'playing';
+  actions.continueRound = admin && game.phase === 'playing' && game.stage === 'round-over';
   actions.nextRound = game.phase === 'playing' && game.stage === 'round-over'
     && isActive(p) && !game.ready.includes(p.id);
   if (p.queued) {
@@ -784,6 +892,7 @@ function actionsFor(game, p) {
   if (game.phase === 'waiting') {
     const n = seated(game).length;
     actions.start = admin && n >= 2;
+    actions.handSize = admin;
     return actions;
   }
   if (game.phase === 'finished') {
@@ -854,6 +963,9 @@ function view(game, playerId) {
     prices: PRICES[game.language] || PRICES.ru,
     phase: game.phase,
     stage: game.stage,
+    handSize: game.handSize || HAND,
+    handMin: HAND_MIN,
+    handMax: HAND_MAX,
     prompt: promptFor(game, you),
     result: game.result,
     winnerId: game.winnerId || null,
@@ -961,6 +1073,10 @@ module.exports = {
   ALPH,
   PRICES,
   HAND,
+  BAG,
+  bagLeft,
+  HAND_MIN,
+  HAND_MAX,
   RuleError,
   createTable,
   join,

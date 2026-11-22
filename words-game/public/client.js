@@ -413,9 +413,22 @@ async function swapCard(id) {
   render();
 }
 
+// Before the deal: how many letters each player gets. The admin changes it,
+// the others only see it.
+function handSizeHTML() {
+  if (state.phase !== 'waiting' || !state.you || state.you.queued) return '';
+  const n = state.handSize;
+  if (!(state.actions && state.actions.handSize)) return `<div class="hand-size">Букв на руке: <b>${n}</b></div>`;
+  return `<div class="hand-size">Букв на руке:
+    <button type="button" class="btn ghost step" data-act="hand-size" data-size="${n - 1}"${n <= state.handMin ? ' disabled' : ''}>−</button>
+    <b>${n}</b>
+    <button type="button" class="btn ghost step" data-act="hand-size" data-size="${n + 1}"${n >= state.handMax ? ' disabled' : ''}>+</button>
+  </div>`;
+}
+
 function actionsHTML() {
   const a = state.actions || {};
-  const buttons = [];
+  const buttons = [handSizeHTML()];
   if (a.start) buttons.push('<button class="btn gold" data-act="start">Раздать</button>');
   if (a.accept) buttons.push('<button class="btn gold" data-act="accept">Принять слова</button>');
   if (a.reject) buttons.push('<button class="btn danger" data-act="reject">Не принять</button>');
@@ -438,11 +451,16 @@ function roundOverHTML() {
   const button = state.actions && state.actions.nextRound
     ? '<button class="btn gold" data-act="next-round">Новый раунд</button>'
     : `<p class="waiting">Ждём остальных: готовы ${ready} из ${rows.length}</p>`;
+  // The admin may instead keep the table and go on with a new round on it.
+  const continueBtn = state.actions && state.actions.continueRound
+    ? '<button class="btn ghost" data-act="continue-round">Продолжить на этом столе</button>'
+    : '';
   return `<div class="overlay" role="dialog" aria-modal="true" aria-label="Раунд окончен">
     <div class="dialog">
       <strong>Раунд окончен</strong>
       <ol class="scores">${rows.map((p) => `<li class="${p.ready ? 'ready' : ''}"><span>${esc(p.name)}${p.you ? ' (вы)' : ''}</span><span>${p.ready ? '✓ ' : ''}${p.score}</span></li>`).join('')}</ol>
       ${button}
+      ${continueBtn}
     </div>
   </div>`;
 }
@@ -671,6 +689,7 @@ app.addEventListener('click', (event) => {
   }
   const act = target.dataset.act;
   if (act === 'start') send({ type: 'start' });
+  else if (act === 'hand-size') send({ type: 'hand-size', size: Number(target.dataset.size) });
   else if (act === 'skip') {
     // Skipping drops whatever was laid on the table this move.
     resetBuilder();
@@ -687,6 +706,7 @@ app.addEventListener('click', (event) => {
   } else if (act === 'swap-card') swapCard(target.dataset.id);
   else if (act === 'again') send({ type: 'again' });
   else if (act === 'next-round') send({ type: 'next-round' });
+  else if (act === 'continue-round') send({ type: 'continue-round' });
   else if (act === 'kick') {
     if (window.confirm(`Выкинуть из игры: ${target.dataset.name}?`)) send({ type: 'kick', playerId: target.dataset.id });
   }
