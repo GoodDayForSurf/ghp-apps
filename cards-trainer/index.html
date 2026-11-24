@@ -83,6 +83,41 @@ select:focus {
     padding-bottom: env(safe-area-inset-bottom);
 }
 
+#bottom-row {
+    position: relative;
+    padding: 0 max(8px, env(safe-area-inset-right)) 8px max(8px, env(safe-area-inset-left));
+}
+
+#dictionaries {
+    width: 100%;
+    min-width: 0;
+}
+
+#skip-btn {
+    position: absolute;
+    z-index: 2;
+    right: max(8px, env(safe-area-inset-right));
+    bottom: calc(100% * 3 + 8px);
+    width: 84px;
+    height: 84px;
+    padding: 0 10px;
+    border: none;
+    border-radius: 16px;
+    background: #222;
+    color: #fff;
+    font: inherit;
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    cursor: pointer;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+}
+
+#skip-btn:active {
+    background: #444;
+}
+
 #stats {
     display: flex;
     justify-content: start;
@@ -128,10 +163,13 @@ comment {
             <span>Total: <span id="dict-size">0</span></span>
             <span>In queue: <span id="queue-size">0</span></span>
         </div>
-        <div id="dictionaries">
-            <select name="dicts" id="dictionaries-select">
-                <option value="">-- Select dictionary --</option>
-            </select>
+        <div id="bottom-row">
+            <button id="skip-btn" type="button" aria-label="Skip this card without counting it">Skip</button>
+            <div id="dictionaries">
+                <select name="dicts" id="dictionaries-select">
+                    <option value="">-- Select dictionary --</option>
+                </select>
+            </div>
         </div>
     </div>
 </div>
@@ -258,12 +296,12 @@ function writeStorage(key, value) {
 }
 
 function saveState() {
-    if (!cardState || !(cardState.repeatQueue?.length > 1)) {
-        return;
-    }
+    if (!cardState) return;
 
     try {
         const dictionariesSelectEl = $('#dictionaries-select');
+        if (!dictionariesSelectEl?.value) return;
+
         const state = {
             dictFile: dictionariesSelectEl.value,
             cardState: cardState ? {
@@ -320,13 +358,22 @@ function restoreState() {
   }
 }
 
-function randomPhrase() {
-    const index = Math.round(Math.random() * (NEW_PHRASES.length - 1));
-    const phrase = NEW_PHRASES.length ? NEW_PHRASES[index] : null;
+function randomPhrase(excludeQuestion) {
+    if (!NEW_PHRASES.length) return null;
 
-    NEW_PHRASES.splice(index, 1);
+    if (!excludeQuestion) {
+        const index = Math.round(Math.random() * (NEW_PHRASES.length - 1));
+        return NEW_PHRASES.splice(index, 1)[0];
+    }
 
-    return phrase;
+    const indexes = [];
+    for (let i = 0; i < NEW_PHRASES.length; i++) {
+        if (!NEW_PHRASES[i].startsWith(excludeQuestion + '\n')) indexes.push(i);
+    }
+    if (!indexes.length) return null;
+
+    const index = indexes[Math.floor(Math.random() * indexes.length)];
+    return NEW_PHRASES.splice(index, 1)[0];
 }
 
 let cardState;
@@ -365,8 +412,13 @@ class CardState {
    answersForShow = 0;
    repeatQueue = [];
 
-   getItemFromRepeatQueue() {
-       const queue = shuffleQueue(this.repeatQueue);
+   getItemFromRepeatQueue(excludeQuestion) {
+       const source = excludeQuestion
+           ? this.repeatQueue.filter(item => item.question !== excludeQuestion)
+           : this.repeatQueue;
+       if (!source.length) return null;
+
+       const queue = shuffleQueue(source);
 
       let item = queue.find(item => item.stage < 9 && getItemSecondsPeriod(item) > stages[item.stage]);
 
@@ -400,6 +452,12 @@ class CardState {
       if(!this.question) return;
 
       let item = this.repeatQueue.find(item => item.question === this.question);
+      this.progressSnapshot = {
+         question: this.question,
+         existed: !!item,
+         stage: item ? item.stage : 0,
+         showTime: item ? item.showTime : null,
+      };
 
       if(!item) {
          item = {
@@ -423,25 +481,43 @@ class CardState {
       document.querySelector('#queue-size').textContent = cardState.repeatQueue.length;
    }
 
-   getNewQuestion() {
-      const repeatItem = this.getItemFromRepeatQueue();
+   showPhrase(phrase) {
+      const parts = phrase.split("\n");
+      this.question = parts[0] || '';
+      this.answers = parts.slice(1);
+      this.currentEntry = phrase;
+      console.log('----NEW-item for queue----->', this.question);
+   }
+
+   getNewQuestion(excludeQuestion) {
+      this.progressSnapshot = null;
+      const repeatItem = this.getItemFromRepeatQueue(excludeQuestion);
 
        if (repeatItem) {
            this.question = repeatItem.question;
            this.answers = getAnswersForQuestion(this.question);
+           this.currentEntry = PHRASES.find(text => text.startsWith(this.question + '\n')) || null;
            console.log('-----item from queue----->', this.question, [repeatItem.stage, (Date.now() - repeatItem.showTime) / (1000 * (repeatItem.stage > 3 ? 60*60 : 60)), repeatItem.stage > 3 ? 'h' : 'm'])
        }
 
        if(!repeatItem || !this.answers) {
-           const parts = randomPhrase()?.split("\n");
+           let phrase = randomPhrase(excludeQuestion);
 
-           if(parts) {
-               this.question = parts[0] || '';
-               this.answers = parts.slice(1);
-               console.log('----NEW-item for queue----->',this.question);
+           if (!phrase && excludeQuestion) {
+               const fallback = this.getItemFromRepeatQueue();
+               if (fallback) {
+                   this.question = fallback.question;
+                   this.answers = getAnswersForQuestion(this.question);
+                   this.currentEntry = PHRASES.find(text => text.startsWith(this.question + '\n')) || null;
+               } else {
+                   phrase = randomPhrase();
+               }
            }
 
+           if (phrase) this.showPhrase(phrase);
        }
+
+       if (!this.answers) this.answers = [];
 
       $('#question').innerText = this.question;
       $('#answer').innerText = '';
@@ -467,6 +543,45 @@ class CardState {
             this.addItemToRepeatQueue();
          }
       }
+   }
+
+   returnCurrentEntryToNewCards() {
+      if (this.currentEntry && !NEW_PHRASES.includes(this.currentEntry)) {
+         NEW_PHRASES.push(this.currentEntry);
+      }
+   }
+
+   restoreSkippedCard() {
+      const question = this.question;
+      if (!question) return;
+
+      const snap = this.progressSnapshot;
+      if (snap && snap.question === question) {
+         if (!snap.existed) {
+            this.repeatQueue = this.repeatQueue.filter(item => item.question !== question);
+            this.returnCurrentEntryToNewCards();
+         } else {
+            const item = this.repeatQueue.find(item => item.question === question);
+            if (item) {
+               item.stage = snap.stage;
+               item.showTime = snap.showTime;
+            }
+         }
+         this.progressSnapshot = null;
+         document.querySelector('#queue-size').textContent = this.repeatQueue.length;
+         saveState();
+         return;
+      }
+
+      const inQueue = this.repeatQueue.some(item => item.question === question);
+      if (!inQueue) this.returnCurrentEntryToNewCards();
+   }
+
+   skip() {
+      const skipped = this.question;
+      this.restoreSkippedCard();
+      this.answersForShow = 0;
+      this.getNewQuestion(skipped);
    }
 }
 
@@ -593,6 +708,12 @@ load().then( () => {
    $('#card').addEventListener('click', () => {
       userInteracted = true;
       cardState?.next();
+   });
+   $('#skip-btn').addEventListener('click', (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      userInteracted = true;
+      cardState?.skip();
    });
    document.addEventListener("keyup", function(event) {
       if (event.code === "Space") {
