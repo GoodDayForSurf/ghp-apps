@@ -140,6 +140,18 @@ select:focus {
     margin-bottom: 1em;
 }
 
+#related {
+    align-self: stretch;
+    margin: 12px 8px 0;
+    padding: 10px 14px;
+    border-radius: 14px;
+    background: #fff4cc;
+    color: #222;
+    text-align: center;
+    font-size: 18px;
+    line-height: 1.3;
+}
+
 comment {
     display: block;
     color: black;
@@ -405,6 +417,22 @@ function getItemSecondsPeriod(item) {
     return (Date.now() - item.showTime) / 1000;
 }
 
+function escapeHtml(value) {
+    return String(value)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+}
+
+function takeRelated(comment) {
+    const source = comment || '';
+    const match = source.match(/>1#([^<]*)</);
+    return {
+        related: match ? match[1].trim() : '',
+        text: source.replace(/>1#([^<]*)</, ' ').replace(/\s{2,}/g, ' ').trim()
+    };
+}
+
 class CardState {
 
    question = '';
@@ -528,7 +556,12 @@ class CardState {
 
    showAnswer() {
       const [answer, comment] = this.answers.at(-this.answersForShow).split("//");
-      $('#answer').innerHTML = `<div>${answer}</div>` + (comment ? `<comment>${comment || ''}</comment>` : '');
+      const { text, related } = takeRelated(comment);
+      const queued = this.repeatQueue.find(item => item.question === this.question);
+      const stageAfter = (queued ? queued.stage : 0) + (this.answersForShow === 1 ? 1 : 0);
+      const relatedHtml = related && stageAfter >= 3 ? `<div id="related">${escapeHtml(related)}</div>` : '';
+      const commentHtml = text ? `<comment>${escapeHtml(text)}</comment>` : '';
+      $('#answer').innerHTML = `<div>${escapeHtml(answer || '')}</div>` + relatedHtml + commentHtml;
       this.answersForShow--;
       saveState();
    }
